@@ -44,7 +44,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+			<plugin>
+				<!-- run command "mvn hibernate3:hbm2ddl" to generate DLL -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<hibernatetool>
+						<classpath>
+							<path location="${project.build.directory}/classes" />
+							<path location="${project.basedir}/src/main/resources/META-INF/" />
+						</classpath>
+
+						<jpaconfiguration persistenceunit="galleryPersistenceUnit" />
+						<hbm2ddl create="true" export="false" destdir="${project.basedir}/target" drop="true" outputfilename="mysql.sql" format="true" console="true"/>
+					</hibernatetool>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+
 
 </project>
