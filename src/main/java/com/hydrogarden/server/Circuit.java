@@ -1,5 +1,6 @@
 package com.hydrogarden.server;
 
+import com.hydrogarden.server.user.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,5 +13,6 @@ public class Circuit extends AbstractEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
 
 }

@@ -12,6 +12,7 @@ public abstract class AbstractEntity {
     @Version
     private int version;
 
+
     public int getId() {
         return id;
     }
