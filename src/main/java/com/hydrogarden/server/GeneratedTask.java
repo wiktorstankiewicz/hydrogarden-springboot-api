@@ -1,5 +1,6 @@
 package com.hydrogarden.server;
 
+import com.hydrogarden.server.circuit.Circuit;
 import com.hydrogarden.server.user.User;
 import jakarta.persistence.*;
 

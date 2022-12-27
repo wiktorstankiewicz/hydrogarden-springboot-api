@@ -1,7 +1,7 @@
 package com.hydrogarden.server.circuitSchedule;
 
 import com.hydrogarden.server.AbstractEntity;
-import com.hydrogarden.server.Circuit;
+import com.hydrogarden.server.circuit.Circuit;
 import com.hydrogarden.server.user.User;
 import jakarta.persistence.*;
 

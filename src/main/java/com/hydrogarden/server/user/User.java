@@ -26,4 +26,5 @@ public class User extends AbstractEntity {
     public void setHashPassword(String hashPassword) {
         this.hashPassword = hashPassword;
     }
+
 }
