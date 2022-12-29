@@ -3,7 +3,7 @@ package com.hydrogarden.server.domain.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="circuit")
+@Table(name = "circuit")
 public class Circuit extends AbstractEntity {
 
     private String code;
@@ -11,7 +11,7 @@ public class Circuit extends AbstractEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public String getCode() {

@@ -1,14 +1,14 @@
-package com.hydrogarden.server.domain.reporitiries;
+package com.hydrogarden.server.domain.entities;
 
-import com.hydrogarden.server.domain.entities.AbstractEntity;
-import com.hydrogarden.server.domain.entities.Circuit;
-import com.hydrogarden.server.domain.entities.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.util.Date;
 
 @Entity
-@Table(name="circuit_schedule")
+@Table(name = "circuit_schedule")
 public class CircuitSchedule extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Circuit circuit;

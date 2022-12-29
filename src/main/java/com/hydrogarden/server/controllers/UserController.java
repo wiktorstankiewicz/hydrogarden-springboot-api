@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -24,26 +25,33 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> get(@PathVariable int id) {
-        try {
-            User user = userService.findById(id);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("")
-    public User add(@RequestBody User user) {
-        return userService.addUser(user);
+        return userService.findById(id)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody User user){
-        try{
+    public ResponseEntity<Object> deleteUser(@RequestBody User user) {
+        try {
             userService.delete(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch(OptimisticLockingFailureException e){
+        } catch (OptimisticLockingFailureException e) {
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<User> addUser(@NonNull @RequestBody User userToCreate) {
+        return Optional.of(userService.createUser(userToCreate))
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+
+    @PostMapping("/update")
+    public ResponseEntity<User> updateUser(@NonNull @RequestBody User userToCreate) {
+        return Optional.of(userService.updateUser(userToCreate))
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }
