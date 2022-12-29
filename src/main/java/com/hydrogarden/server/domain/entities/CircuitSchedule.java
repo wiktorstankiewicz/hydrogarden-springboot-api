@@ -18,20 +18,52 @@ public class CircuitSchedule extends AbstractEntity {
     private int frequencyDays;
     private int wateringTime;
     private boolean enabled;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
-    public CircuitSchedule(Circuit circuit, Date startDate, Date endDate, int frequencyDays, int wateringTime, boolean enabled, User user) {
-        this.circuit = circuit;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.frequencyDays = frequencyDays;
-        this.wateringTime = wateringTime;
-        this.enabled = enabled;
-        this.user = user;
+    public Circuit getCircuit() {
+        return circuit;
     }
 
-    public CircuitSchedule() {
+    public void setCircuit(Circuit circuit) {
+        this.circuit = circuit;
+    }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getFrequencyDays() {
+        return frequencyDays;
+    }
+
+    public void setFrequencyDays(int frequencyDays) {
+        this.frequencyDays = frequencyDays;
+    }
+
+    public int getWateringTime() {
+        return wateringTime;
+    }
+
+    public void setWateringTime(int wateringTime) {
+        this.wateringTime = wateringTime;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
