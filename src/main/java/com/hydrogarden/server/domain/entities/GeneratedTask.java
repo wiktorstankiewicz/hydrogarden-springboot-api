@@ -1,7 +1,5 @@
-package com.hydrogarden.server;
+package com.hydrogarden.server.domain.entities;
 
-import com.hydrogarden.server.circuit.Circuit;
-import com.hydrogarden.server.user.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

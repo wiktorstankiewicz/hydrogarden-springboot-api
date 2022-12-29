@@ -1,8 +1,8 @@
-package com.hydrogarden.server.circuitSchedule;
+package com.hydrogarden.server.domain.reporitiries;
 
-import com.hydrogarden.server.AbstractEntity;
-import com.hydrogarden.server.circuit.Circuit;
-import com.hydrogarden.server.user.User;
+import com.hydrogarden.server.domain.entities.AbstractEntity;
+import com.hydrogarden.server.domain.entities.Circuit;
+import com.hydrogarden.server.domain.entities.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

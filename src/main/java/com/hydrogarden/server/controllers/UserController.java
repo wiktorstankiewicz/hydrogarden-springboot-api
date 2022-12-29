@@ -1,5 +1,7 @@
-package com.hydrogarden.server.user;
+package com.hydrogarden.server.controllers;
 
+import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;

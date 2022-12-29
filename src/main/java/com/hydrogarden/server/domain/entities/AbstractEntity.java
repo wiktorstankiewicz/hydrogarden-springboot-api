@@ -1,4 +1,4 @@
-package com.hydrogarden.server;
+package com.hydrogarden.server.domain.entities;
 
 import jakarta.persistence.*;
 

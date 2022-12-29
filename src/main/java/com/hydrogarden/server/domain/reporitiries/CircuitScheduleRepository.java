@@ -1,4 +1,4 @@
-package com.hydrogarden.server.circuitSchedule;
+package com.hydrogarden.server.domain.reporitiries;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,5 @@
-package com.hydrogarden.server.user;
+package com.hydrogarden.server.domain.entities;
 
-import com.hydrogarden.server.AbstractEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 

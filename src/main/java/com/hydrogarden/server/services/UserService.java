@@ -1,5 +1,7 @@
-package com.hydrogarden.server.user;
+package com.hydrogarden.server.services;
 
+import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.domain.reporitiries.UserRepository;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

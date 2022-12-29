@@ -1,5 +1,6 @@
-package com.hydrogarden.server.user;
+package com.hydrogarden.server.domain.reporitiries;
 
+import com.hydrogarden.server.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

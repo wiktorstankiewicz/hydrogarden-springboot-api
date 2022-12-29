@@ -1,7 +1,5 @@
-package com.hydrogarden.server.circuit;
+package com.hydrogarden.server.domain.entities;
 
-import com.hydrogarden.server.AbstractEntity;
-import com.hydrogarden.server.user.User;
 import jakarta.persistence.*;
 
 @Entity

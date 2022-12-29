@@ -1,5 +1,7 @@
-package com.hydrogarden.server.circuitSchedule;
+package com.hydrogarden.server.services;
 
+import com.hydrogarden.server.domain.reporitiries.CircuitSchedule;
+import com.hydrogarden.server.domain.reporitiries.CircuitScheduleRepository;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
