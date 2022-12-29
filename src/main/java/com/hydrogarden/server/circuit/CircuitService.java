@@ -14,4 +14,8 @@ public class CircuitService {
     public List<Circuit> findAll(){
         return circuitRepository.findAll();
     }
+
+    public Circuit findById(int id) {
+        return circuitRepository.findById(id).get();
+    }
 }

@@ -19,4 +19,8 @@ public class CircuitController {
         return circuitService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Circuit findById(@PathVariable int id) {
+    return circuitService.findById(id);}
+
 }
