@@ -10,9 +10,21 @@ public class Circuit extends AbstractEntity {
 
     private String name;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "circuit_schedule_id")
+    private CircuitSchedule circuitSchedule;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public CircuitSchedule getCircuitSchedule() {
+        return circuitSchedule;
+    }
+
+    public void setCircuitSchedule(CircuitSchedule circuitSchedule) {
+        this.circuitSchedule = circuitSchedule;
+    }
 
     public String getCode() {
         return code;

@@ -2,21 +2,33 @@ package com.hydrogarden.server.controllers;
 
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
+import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.services.CircuitScheduleService;
+import com.hydrogarden.server.services.CircuitService;
+import com.hydrogarden.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/circuit-schedule")
 public class CircuitScheduleController {
 
     @Autowired
     private CircuitScheduleService circuitScheduleService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CircuitService circuitService;
 
 
 
@@ -27,6 +39,8 @@ public class CircuitScheduleController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+
+
     @GetMapping("/{id}")
     public ResponseEntity<CircuitSchedule> findById(@PathVariable int id) {
         return circuitScheduleService.findScheduleById(id)
@@ -34,10 +48,7 @@ public class CircuitScheduleController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/circuit/{circuitId}")
-    public List<CircuitSchedule> findByCircuitId( @PathVariable int circuitId) {
-        return circuitScheduleService.findByCircuit(circuitId);
-    }
+
 
     @PostMapping("/delete")
     public void deleteCircuitSchedule(@RequestBody CircuitSchedule circuitToDelete) {
@@ -59,8 +70,8 @@ public class CircuitScheduleController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @PostMapping("/activate/{id}")
-    public ResponseEntity<Boolean> activateCircuit(@PathVariable int id){
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<Boolean> activate(@PathVariable int id){
         if(circuitScheduleService.activate(id)){
             return new ResponseEntity<>(true,HttpStatus.OK);
         }
@@ -68,8 +79,8 @@ public class CircuitScheduleController {
 
     }
 
-    @PostMapping("/deactivate/{id}")
-    public ResponseEntity<Boolean> deactivateCircuit(@PathVariable int id){
+    @PatchMapping("/deactivate/{id}")
+    public ResponseEntity<Boolean> deactivate(@PathVariable int id){
         if(circuitScheduleService.deactivate(id)){
             return new ResponseEntity<>(true,HttpStatus.OK);
         }

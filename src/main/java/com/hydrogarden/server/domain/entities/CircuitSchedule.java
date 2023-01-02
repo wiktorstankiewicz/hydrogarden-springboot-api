@@ -10,22 +10,12 @@ import java.util.Date;
 @Entity
 @Table(name = "circuit_schedule")
 public class CircuitSchedule extends AbstractEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Circuit circuit;
 
     private Date startDate;
     private Date endDate;
     private int frequencyDays;
     private int wateringTime;
     private boolean deactivated;
-
-    public Circuit getCircuit() {
-        return circuit;
-    }
-
-    public void setCircuit(Circuit circuit) {
-        this.circuit = circuit;
-    }
 
     public Date getStartDate() {
         return startDate;

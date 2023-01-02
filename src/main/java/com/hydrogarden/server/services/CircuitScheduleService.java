@@ -43,10 +43,7 @@ public class CircuitScheduleService {
         return circuitScheduleRepository.save(circuitScheduleToUpdate);
     }
 
-    public List<CircuitSchedule> findByCircuit(int circuitId) {
-        Circuit circuit = circuitService.findById(circuitId).orElse(null);
-        return circuitScheduleRepository.findByCircuit(circuit);
-    }
+
 
     public boolean activate(int id) {
         Optional<CircuitSchedule> optionalCircuitSchedule = circuitScheduleRepository.findById(id);

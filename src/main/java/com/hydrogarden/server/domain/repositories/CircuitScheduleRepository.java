@@ -10,5 +10,4 @@ import java.util.List;
 
 @Repository
 public interface CircuitScheduleRepository extends JpaRepository<CircuitSchedule, Integer> {
-    List<CircuitSchedule> findByCircuit(Circuit circuit);
 }
