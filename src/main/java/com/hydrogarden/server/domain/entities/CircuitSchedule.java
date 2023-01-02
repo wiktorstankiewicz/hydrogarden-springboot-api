@@ -1,9 +1,6 @@
 package com.hydrogarden.server.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -16,6 +13,9 @@ public class CircuitSchedule extends AbstractEntity {
     private int frequencyDays;
     private int wateringTime;
     private boolean deactivated;
+
+    @ManyToOne
+    private Circuit circuit;
 
     public Date getStartDate() {
         return startDate;

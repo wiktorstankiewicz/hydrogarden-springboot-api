@@ -2,6 +2,8 @@ package com.hydrogarden.server.domain.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "circuit")
 public class Circuit extends AbstractEntity {
@@ -10,21 +12,22 @@ public class Circuit extends AbstractEntity {
 
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "circuit_schedule_id")
-    private CircuitSchedule circuitSchedule;
+    @OneToMany(mappedBy = "circuit")
+    private List<CircuitSchedule> circuitSchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CircuitSchedule getCircuitSchedule() {
+    public List<CircuitSchedule> getCircuitSchedule() {
         return circuitSchedule;
     }
 
-    public void setCircuitSchedule(CircuitSchedule circuitSchedule) {
+    public void setCircuitSchedule(List<CircuitSchedule> circuitSchedule) {
         this.circuitSchedule = circuitSchedule;
     }
+
+
 
     public String getCode() {
         return code;
