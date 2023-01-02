@@ -2,8 +2,8 @@ package com.hydrogarden.server.services;
 
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
-import com.hydrogarden.server.domain.reporitiries.CircuitRepository;
-import com.hydrogarden.server.domain.reporitiries.UserRepository;
+import com.hydrogarden.server.domain.repositories.CircuitRepository;
+import com.hydrogarden.server.domain.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

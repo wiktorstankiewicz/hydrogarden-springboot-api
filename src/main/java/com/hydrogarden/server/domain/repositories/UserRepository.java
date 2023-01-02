@@ -1,4 +1,4 @@
-package com.hydrogarden.server.domain.reporitiries;
+package com.hydrogarden.server.domain.repositories;
 
 import com.hydrogarden.server.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

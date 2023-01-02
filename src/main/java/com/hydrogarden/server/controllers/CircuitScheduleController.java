@@ -18,6 +18,8 @@ public class CircuitScheduleController {
     @Autowired
     private CircuitScheduleService circuitScheduleService;
 
+
+
     @GetMapping("")
     public ResponseEntity<List<CircuitSchedule>> findAll() {
         return Optional.ofNullable(circuitScheduleService.findAll())
@@ -55,5 +57,23 @@ public class CircuitScheduleController {
         return Optional.of(circuitScheduleService.updateCircuitSchedule(circuitScheduleToUpdate))
                 .map(circuitSchedule -> new ResponseEntity<>(circuitSchedule, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @PostMapping("/activate/{id}")
+    public ResponseEntity<Boolean> activateCircuit(@PathVariable int id){
+        if(circuitScheduleService.activate(id)){
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
+
+    }
+
+    @PostMapping("/deactivate/{id}")
+    public ResponseEntity<Boolean> deactivateCircuit(@PathVariable int id){
+        if(circuitScheduleService.deactivate(id)){
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
+
     }
 }

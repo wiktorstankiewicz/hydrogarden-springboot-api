@@ -2,9 +2,9 @@ package com.hydrogarden.server.services;
 
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
-import com.hydrogarden.server.domain.entities.User;
-import com.hydrogarden.server.domain.reporitiries.CircuitScheduleRepository;
+import com.hydrogarden.server.domain.repositories.CircuitScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +46,23 @@ public class CircuitScheduleService {
     public List<CircuitSchedule> findByCircuit(int circuitId) {
         Circuit circuit = circuitService.findById(circuitId).orElse(null);
         return circuitScheduleRepository.findByCircuit(circuit);
+    }
+
+    public boolean activate(int id) {
+        Optional<CircuitSchedule> optionalCircuitSchedule = circuitScheduleRepository.findById(id);
+        if(optionalCircuitSchedule.isEmpty()) return false;
+        CircuitSchedule circuitSchedule = optionalCircuitSchedule.get();
+        circuitSchedule.setDeactivated(false);
+        circuitScheduleRepository.save(circuitSchedule);
+        return true;
+    }
+
+    public boolean deactivate(int id) {
+        Optional<CircuitSchedule> optionalCircuitSchedule = circuitScheduleRepository.findById(id);
+        if(optionalCircuitSchedule.isEmpty()) return false;
+        CircuitSchedule circuitSchedule = optionalCircuitSchedule.get();
+        circuitSchedule.setDeactivated(true);
+        circuitScheduleRepository.save(circuitSchedule);
+        return true;
     }
 }

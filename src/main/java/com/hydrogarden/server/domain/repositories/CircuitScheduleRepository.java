@@ -1,9 +1,9 @@
-package com.hydrogarden.server.domain.reporitiries;
+package com.hydrogarden.server.domain.repositories;
 
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
-import com.hydrogarden.server.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

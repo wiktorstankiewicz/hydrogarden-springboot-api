@@ -17,7 +17,7 @@ public class CircuitSchedule extends AbstractEntity {
     private Date endDate;
     private int frequencyDays;
     private int wateringTime;
-    private boolean enabled;
+    private boolean deactivated;
 
     public Circuit getCircuit() {
         return circuit;
@@ -59,11 +59,11 @@ public class CircuitSchedule extends AbstractEntity {
         this.wateringTime = wateringTime;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isDeactivated() {
+        return deactivated;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDeactivated(boolean enabled) {
+        this.deactivated = enabled;
     }
 }
