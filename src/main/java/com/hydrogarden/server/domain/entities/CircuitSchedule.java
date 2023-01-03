@@ -3,13 +3,15 @@ package com.hydrogarden.server.domain.entities;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.*;
 
 @Entity
 @Table(name = "circuit_schedule")
 public class CircuitSchedule extends AbstractEntity {
 
-    private Date startDate;
-    private Date endDate;
+    private LocalTime startTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private int frequencyDays;
     private int wateringTime;
     private boolean deactivated;
@@ -17,20 +19,28 @@ public class CircuitSchedule extends AbstractEntity {
     @ManyToOne
     private Circuit circuit;
 
-    public Date getStartDate() {
-        return startDate;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public Circuit getCircuit() {
+        return circuit;
+    }
+
+    public void setCircuit(Circuit circuit) {
+        this.circuit = circuit;
     }
 
     public int getFrequencyDays() {
