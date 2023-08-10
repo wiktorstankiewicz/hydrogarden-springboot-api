@@ -11,8 +11,7 @@ public class GeneratedTask extends AbstractEntity {
     private Circuit circuit;
     private Date datetime;
 
-    @Enumerated(EnumType.STRING)
-    private Mode mode;
+    private boolean mode;
 
     private boolean done;
 
