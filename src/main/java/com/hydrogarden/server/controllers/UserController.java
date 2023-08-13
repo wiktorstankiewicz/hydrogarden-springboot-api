@@ -1,6 +1,7 @@
 package com.hydrogarden.server.controllers;
 
 import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.exceptions.UsernameTakenException;
 import com.hydrogarden.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -42,9 +43,13 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> addUser(@NonNull @RequestBody User userToCreate) {
-        return Optional.of(userService.createUser(userToCreate))
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        try{
+            return Optional.of(userService.createUser(userToCreate))
+                    .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        }catch (UsernameTakenException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
