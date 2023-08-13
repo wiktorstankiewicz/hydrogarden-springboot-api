@@ -1,5 +1,6 @@
 package com.hydrogarden.server.security;
 
+import com.hydrogarden.server.services.JwtService;
 import com.hydrogarden.server.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
