@@ -1,11 +1,17 @@
 package com.hydrogarden.server.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
-@Entity
 @Table(name = "generated_task")
+@Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class GeneratedTask extends AbstractEntity {
     private Date datetime;
 
