@@ -1,29 +1,69 @@
 package com.hydrogarden.server.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Table(name = "user")
-public class User extends AbstractEntity {
+@Table(name = "user",
+uniqueConstraints = @UniqueConstraint(columnNames = "username")
+)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class User implements UserDetails {
 
-    private String userName;
-    private String hashPassword;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String username;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public String getUserName() {
-        return userName;
+    @OneToMany(mappedBy = "user")
+    private List<Circuit> circuits;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public String getHashPassword() {
-        return hashPassword;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setHashPassword(String hashPassword) {
-        this.hashPassword = hashPassword;
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
