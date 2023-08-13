@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,16 +26,20 @@ import java.util.logging.Logger;
 public class AuthController {
     private final UserRepository userRepository;
     private final Logger logger = Logger.getLogger(AuthController.class.getName());
+    private final PasswordEncoder passwordEncoder;
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
         if(!validUsername(registerDto.getUsername()) || ! validPassword(registerDto.getPassword())){
             return new ResponseEntity<>("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
-        User user = User.builder().password(registerDto.getPassword()).username(registerDto.getUsername()).role(Role.USER).build();
+        String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
+        User user = User.builder().password(encodedPassword).username(registerDto.getUsername()).role(Role.USER).build();
+        try{
+            User addedUser = userRepository.save(user);
+        }catch(Exception e){
+            return new ResponseEntity<>("User already exists",HttpStatus.BAD_REQUEST);
+        }
 
-        User addedUser = userRepository.save(user);
-
-        logger.info("Added user"+ addedUser.toString());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

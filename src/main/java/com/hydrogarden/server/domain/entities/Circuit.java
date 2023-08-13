@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 public class Circuit extends AbstractEntity {
 
-    private String code;
+    private int code;
 
     private String name;
 
