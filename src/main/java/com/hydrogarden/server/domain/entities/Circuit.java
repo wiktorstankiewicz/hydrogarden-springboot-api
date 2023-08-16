@@ -19,6 +19,7 @@ public class Circuit extends AbstractEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "circuit")

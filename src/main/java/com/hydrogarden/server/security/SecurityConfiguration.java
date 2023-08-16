@@ -5,13 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -28,10 +33,19 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(request -> {
-                    request.anyRequest().permitAll();
+                    request.requestMatchers("/auth/**").permitAll()
+                            .anyRequest().authenticated();
                 }).sessionManagement(manager -> {
                     manager.sessionCreationPolicy(SessionCreationPolicy.NEVER);
-                }).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                }).authenticationProvider(authenticationProvider()).addFilterBefore(new BearerTokenAuthenticationFilter(new AuthenticationManager() {
+                    @Override
+                    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                        BearerTokenAuthenticationToken token = (BearerTokenAuthenticationToken) authentication;
+                        token.setAuthenticated(true);
+                        token.getPrincipal();
+                        return token;
+                    }
+                }), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

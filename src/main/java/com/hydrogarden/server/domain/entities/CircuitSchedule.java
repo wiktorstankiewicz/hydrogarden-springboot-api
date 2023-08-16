@@ -23,6 +23,7 @@ public class CircuitSchedule extends AbstractEntity {
     private boolean deactivated;
 
     @ManyToOne
+    @JoinColumn(name = "circuit_id")
     private Circuit circuit;
 
 }

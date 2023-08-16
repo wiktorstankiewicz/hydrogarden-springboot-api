@@ -18,7 +18,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class JwtService {
     public static int EXPIRATION_TIME = 1000*60*24;
-    public static String SIGNING_KEY = "VERYSECRET";
+    public static String SIGNING_KEY = "2914FD4E2914FD4ED6AB7B61577AFACABA9D9D6AB7B61577AF2914FD4ED6AB7B61577AFACABA9D9ACABA9D9";
     public boolean isTokenValid(String jwt){
         return Jwts.parser().setSigningKey(getSigningKey()).isSigned(jwt);
     }
@@ -43,10 +43,10 @@ public class JwtService {
     public boolean isTokenExpired(String jwt){
         Date expDate = extractClaim(jwt,Claims::getExpiration);
         Date now = new Date(System.currentTimeMillis());
-        return now.before(expDate);
+        return !now.before(expDate);
     }
     public Claims extractAllClaims(String jwt){
-        return Jwts.parser().setSigningKey(getSigningKey()).parseClaimsJwt(jwt).getBody();
+        return Jwts.parser().setSigningKey(getSigningKey()).parseClaimsJws(jwt).getBody();
     }
     public Key getSigningKey(){
         byte[] keyBytes = Decoders.BASE64.decode(SIGNING_KEY);
