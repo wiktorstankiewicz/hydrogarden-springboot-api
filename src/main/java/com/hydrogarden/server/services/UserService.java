@@ -34,15 +34,15 @@ public class UserService {
     }
 
     public User createUser(User userToCreate) throws UsernameTakenException {
-        boolean exists = userRepository.findByUsername(userToCreate.getUsername());
-        if(exists){
+        User user = userRepository.findByUsername(userToCreate.getUsername());
+        if(user != null){
             throw new UsernameTakenException();
         }
         return userRepository.save(userToCreate);
     }
 
     public User updateUser(User userToCreate) {
-        boolean exists = userRepository.findByUsername(userToCreate.getUsername());
+        User user = userRepository.findByUsername(userToCreate.getUsername());
         return userRepository.save(userToCreate);
     }
 
@@ -50,7 +50,7 @@ public class UserService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return null;
+                return userRepository.findByUsername(username);
             }
         };
     }
