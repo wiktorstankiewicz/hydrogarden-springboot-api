@@ -50,7 +50,14 @@ public class UserService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByUsername(username);
+                if(username == null){
+                    throw new UsernameNotFoundException("");
+                }
+                UserDetails userDetails = userRepository.findByUsername(username);
+                if(userDetails == null){
+                    throw new UsernameNotFoundException("");
+                }
+                return userDetails;
             }
         };
     }

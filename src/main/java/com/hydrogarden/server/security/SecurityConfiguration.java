@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,27 +26,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final JwtAuthFilter jwtAuthFilter;
     private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/auth/**").permitAll()
-                            .anyRequest().authenticated();
-                }).sessionManagement(manager -> {
-                    manager.sessionCreationPolicy(SessionCreationPolicy.NEVER);
-                }).authenticationProvider(authenticationProvider()).addFilterBefore(new BearerTokenAuthenticationFilter(new AuthenticationManager() {
-                    @Override
-                    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                        BearerTokenAuthenticationToken token = (BearerTokenAuthenticationToken) authentication;
-                        token.setAuthenticated(true);
-                        token.getPrincipal();
-                        return token;
-                    }
-                }), UsernamePasswordAuthenticationFilter.class);
+        //http
+        //        .csrf().disable()
+        //        .authorizeHttpRequests(request -> {
+        //            request.requestMatchers("/auth/**").permitAll()
+        //                    .anyRequest().authenticated();
+        //        }).sessionManagement(manager -> {
+        //            manager.sessionCreationPolicy(SessionCreationPolicy.NEVER);
+        //        }).addFilterBefore(new BearerTokenAuthenticationFilter(new ProviderManager(authenticationProvider())),UsernamePasswordAuthenticationFilter.class);
+        http.authenticationManager(new ProviderManager(authenticationProvider())).csrf().disable().formLogin().and().authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
 

@@ -19,10 +19,13 @@ public class GeneratedTask extends AbstractEntity {
 
     private boolean done;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="circuit_id")
     private Circuit circuit;
 
 

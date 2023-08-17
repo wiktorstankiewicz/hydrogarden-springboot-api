@@ -1,5 +1,6 @@
 package com.hydrogarden.server.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +24,11 @@ public class Circuit extends AbstractEntity {
     private User user;
 
     @OneToMany(mappedBy = "circuit")
+    @JsonIgnore
     private List<CircuitSchedule> circuitSchedule;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "circuit")
+    @JsonIgnore
     private List<GeneratedTask> generatedTasks;
 
 
