@@ -1,6 +1,7 @@
 package com.hydrogarden.server.security;
 
 import com.hydrogarden.server.services.UserService;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import io.jsonwebtoken.security.SignatureException;
 
 
 @Component
@@ -36,18 +38,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         //7 is the length of string "Bearer "
         jwtToken = authHeader.substring(7);
-        username = jwtService.extractUsername(jwtToken);
-        boolean isValid = jwtService.isTokenValid(jwtToken);
-        boolean isExpired = jwtService.isTokenExpired(jwtToken);
+        boolean isValid = false;
+        boolean isExpired = true;
+        try {
+            username = jwtService.extractUsername(jwtToken);
+            isValid = jwtService.isTokenValid(jwtToken);
+            isExpired = jwtService.isTokenExpired(jwtToken);
+        } catch (MalformedJwtException | SignatureException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (isValid && !isExpired) {
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(username);
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            UsernamePasswordAuthenticationToken userAuthToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken userAuthToken = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
             userAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             securityContext.setAuthentication(userAuthToken);
             SecurityContextHolder.setContext(securityContext);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }
