@@ -71,8 +71,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@Validated @NotNull @NotBlank @CookieValue("Authorization") String authCookie, HttpServletRequest request, HttpServletResponse response) {
-        Cookie jwtCookie = new Cookie("Authorization", "");
+    public ResponseEntity<String> logout(@Validated @NotNull @NotBlank @CookieValue("Authorization") Cookie jwtCookie, HttpServletRequest request, HttpServletResponse response) {
         jwtCookie.setSecure(true);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setMaxAge(0);
