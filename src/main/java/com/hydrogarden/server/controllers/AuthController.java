@@ -1,11 +1,10 @@
 package com.hydrogarden.server.controllers;
 
-import com.fasterxml.jackson.annotation.JsonKey;
 import com.hydrogarden.server.domain.entities.Role;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.domain.repositories.UserRepository;
-import com.hydrogarden.server.dto.LoginDto;
-import com.hydrogarden.server.dto.RegisterDto;
+import com.hydrogarden.server.domain.dto.LoginDto;
+import com.hydrogarden.server.domain.dto.RegisterDto;
 import com.hydrogarden.server.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,12 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")

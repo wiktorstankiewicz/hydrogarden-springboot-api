@@ -30,7 +30,6 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     private List<Circuit> circuits;
 
 

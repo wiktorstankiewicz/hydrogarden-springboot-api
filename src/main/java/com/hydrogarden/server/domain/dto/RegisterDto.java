@@ -1,14 +1,12 @@
-package com.hydrogarden.server.dto;
+package com.hydrogarden.server.domain.dto;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class LoginDto {
+public class RegisterDto {
     private String username;
     private String password;
 }

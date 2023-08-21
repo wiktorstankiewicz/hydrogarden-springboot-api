@@ -25,16 +25,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("")
-    public List<User> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/all")
+    public List<User> findAll(@AuthenticationPrincipal User userDetails) {
         logger.info(userDetails.getUsername());
         return userService.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable int id ,@AuthenticationPrincipal UserDetails principal) {
-        logger.debug(principal.getUsername());
-        return userService.findById(id)
+    @GetMapping("")
+    public ResponseEntity<User> get(@PathVariable int id ,@AuthenticationPrincipal User principal) {
+        return userService.findById((int) principal.getId())
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
