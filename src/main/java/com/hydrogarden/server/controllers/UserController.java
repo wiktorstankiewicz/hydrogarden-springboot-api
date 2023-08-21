@@ -3,11 +3,15 @@ package com.hydrogarden.server.controllers;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.exceptions.UsernameTakenException;
 import com.hydrogarden.server.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +20,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class.getName());
     @Autowired
     private UserService userService;
 
     @GetMapping("")
-    public List<User> findAll() {
+    public List<User> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.info(userDetails.getUsername());
         return userService.findAll();
     }
 

@@ -1,35 +1,38 @@
 package com.hydrogarden.server.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Entity
 @Table(name = "circuit")
+@Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class Circuit extends AbstractEntity {
 
-    private String code;
+    private int code;
 
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "circuit")
+    @JsonIgnore
     private List<CircuitSchedule> circuitSchedule;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "circuit")
+    @JsonIgnore
     private List<GeneratedTask> generatedTasks;
 
 
 
 
 }
+
