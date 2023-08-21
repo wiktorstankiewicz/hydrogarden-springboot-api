@@ -36,9 +36,6 @@ public class AuthController {
     private final JwtService jwtService;
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        if(!isValidUsername(registerDto.getUsername()) || ! isValidPassword(registerDto.getPassword())){
-            return new ResponseEntity<>("Invalid username or password", HttpStatus.BAD_REQUEST);
-        }
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
         User user = User.builder().password(encodedPassword).username(registerDto.getUsername()).role(Role.USER).build();
         try{
@@ -55,18 +52,15 @@ public class AuthController {
         String username = loginDto.getUsername();
         String password = loginDto.getPassword();
 
-        if(!isValidUsername(username) || !isValidPassword(password)){
-            return new ResponseEntity<>("Password or username is not correct",HttpStatus.BAD_REQUEST);
-        }
 
         User user = userRepository.findByUsername(username);
 
         if(passwordEncoder.matches(password,user.getPassword())){
             String token = jwtService.generateToken(new HashMap<>(),user);
-            Cookie jwtCookie = new Cookie("Authorisation",token);
+            Cookie jwtCookie = new Cookie("Authorization",token);
             jwtCookie.setSecure(true);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setMaxAge(600);
+            jwtCookie.setMaxAge(1000);
             jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -77,12 +71,11 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response){
         if(request.getCookies() == null){
-            return ResponseEntity.badRequest().body("Authorisation cookie not founr");
+            return ResponseEntity.badRequest().body("Authorization cookie not found");
         }
-        Cookie authCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("Authorisation")).findFirst().orElse(null);
+        Cookie authCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("Authorization")).findFirst().orElse(null);
         if(authCookie != null){
-
-            Cookie jwtCookie = new Cookie("Authorisation","");
+            Cookie jwtCookie = new Cookie("Authorization","");
             jwtCookie.setSecure(true);
             jwtCookie.setHttpOnly(true);
             jwtCookie.setMaxAge(0);
@@ -90,16 +83,6 @@ public class AuthController {
             response.addCookie(jwtCookie);
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().body("Authorisation cookie not found");
-    }
-
-    private boolean isValidUsername(String username) {
-        logger.warning("Using stub method");
-        return true;
-    }
-
-    private boolean isValidPassword(String password) {
-        logger.warning("Using stub method");
-        return true;
+        return ResponseEntity.badRequest().body("Authorization cookie not found");
     }
 }

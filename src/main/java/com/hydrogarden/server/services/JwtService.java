@@ -1,4 +1,4 @@
-package com.hydrogarden.server.security;
+package com.hydrogarden.server.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

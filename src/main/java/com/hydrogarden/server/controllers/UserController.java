@@ -32,7 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable int id) {
+    public ResponseEntity<User> get(@PathVariable int id ,@AuthenticationPrincipal UserDetails principal) {
+        logger.debug(principal.getUsername());
         return userService.findById(id)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
