@@ -3,23 +3,25 @@ package com.hydrogarden.server.controllers;
 import com.hydrogarden.server.domain.entities.Role;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.domain.repositories.UserRepository;
-import com.hydrogarden.server.domain.dto.LoginDto;
-import com.hydrogarden.server.domain.dto.RegisterDto;
+import com.hydrogarden.server.controllers.requestResponseEntities.LoginRequestEntity;
+import com.hydrogarden.server.controllers.requestResponseEntities.RegisterRequestEntity;
 import com.hydrogarden.server.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -31,9 +33,9 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
-        User user = User.builder().password(encodedPassword).username(registerDto.getUsername()).role(Role.USER).build();
+    public ResponseEntity<String> register(@RequestBody RegisterRequestEntity registerRequestEntity){
+        String encodedPassword = passwordEncoder.encode(registerRequestEntity.getPassword());
+        User user = User.builder().password(encodedPassword).username(registerRequestEntity.getUsername()).role(Role.USER).build();
         try{
             User addedUser = userRepository.save(user);
         }catch(Exception e){
@@ -44,9 +46,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
-        String username = loginDto.getUsername();
-        String password = loginDto.getPassword();
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestEntity loginRequestEntity, HttpServletResponse response){
+        String username = loginRequestEntity.getUsername();
+        String password = loginRequestEntity.getPassword();
 
 
         User user = userRepository.findByUsername(username);
@@ -80,5 +82,18 @@ public class AuthController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Authorization cookie not found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
