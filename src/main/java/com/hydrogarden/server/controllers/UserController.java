@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<User> get(@PathVariable int id ,@AuthenticationPrincipal User principal) {
+    public ResponseEntity<User> get(@AuthenticationPrincipal User principal) {
         return userService.findById((int) principal.getId())
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
