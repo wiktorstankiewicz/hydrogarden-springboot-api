@@ -45,11 +45,7 @@ public class SecurityConfiguration {
 
     }
 
-    @Bean
-    public InitializingBean initializingBean() {
-        return () -> SecurityContextHolder.setStrategyName(
-                SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-    }
+
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -59,10 +55,7 @@ public class SecurityConfiguration {
         return new ProviderManager(authProvider);
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        return (web) -> web.ignoring().requestMatchers("/login/**", "/logout/**");
-    }
+
 
 
     @Bean

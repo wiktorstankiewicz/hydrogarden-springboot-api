@@ -1,40 +1,39 @@
 package com.hydrogarden.server.controllers;
 
 
-import com.hydrogarden.server.security.AsyncConfig;
-import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.concurrent.*;
 
 @RestController
 @RequestMapping("/hydroponic")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HydroponicController {
 
-    private Executor executor;
-
+    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("")
-    public DeferredResult<String> test(){
+    public DeferredResult<String> test() {
         DeferredResult<String> result = new DeferredResult<>();
 
-        executor.execute(() ->{
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println("done");
-            result.setResult("Done!!");
-        });
+        try {
+            Thread.sleep(1000000000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        logger.debug("Done!");
+        logger.debug(Thread.currentThread().getName());
+        result.setErrorResult(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         return result;
     }
 }
