@@ -20,6 +20,7 @@ public class CircuitSchedule extends AbstractEntity {
     private LocalDate endDate;
     private int frequencyDays;
     private int wateringTime;
+
     private boolean deactivated;
 
     @ManyToOne

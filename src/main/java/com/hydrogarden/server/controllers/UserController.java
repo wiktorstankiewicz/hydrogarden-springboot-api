@@ -1,5 +1,6 @@
 package com.hydrogarden.server.controllers;
 
+import com.hydrogarden.server.domain.dto.UserDto;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.exceptions.UsernameTakenException;
 import com.hydrogarden.server.services.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -26,27 +28,18 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/all")
-    public List<User> findAll(@AuthenticationPrincipal User userDetails) {
-        logger.info(userDetails.getUsername());
-        return userService.findAll();
+    public List<UserDto> findAll() {
+        return userService.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    @GetMapping("")
-    public ResponseEntity<User> get(@AuthenticationPrincipal User principal) {
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> get(@AuthenticationPrincipal User principal) {
         return userService.findById((int) principal.getId())
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .map(user -> new ResponseEntity<>(new UserDto(user), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<Object> deleteUser(@RequestBody User user) {
-        try {
-            userService.delete(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (OptimisticLockingFailureException e) {
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-        }
-    }
+
 
     @PostMapping("/create")
     public ResponseEntity<User> addUser(@NonNull @RequestBody User userToCreate) {

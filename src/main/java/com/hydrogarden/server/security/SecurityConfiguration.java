@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/auth/**", "/error/**").permitAll()
+                    request.requestMatchers("/auth/**", "/error/**","/v2/api-docs/**","/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .authenticationManager(authenticationManager())

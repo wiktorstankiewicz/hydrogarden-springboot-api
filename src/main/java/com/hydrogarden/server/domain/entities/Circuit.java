@@ -19,17 +19,12 @@ public class Circuit extends AbstractEntity {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "circuit")
-    private List<CircuitSchedule> circuitSchedule;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "circuit")
-    private List<GeneratedTask> generatedTasks;
-
-
+    @OneToMany(mappedBy = "circuit", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CircuitSchedule> circuitSchedules;
 
 
 }

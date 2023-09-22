@@ -61,4 +61,12 @@ public class UserService {
             }
         };
     }
+
+    public Optional<User> findByUsername(String username) {
+        try{
+            return Optional.of(userRepository.findByUsername(username));
+        }catch(Exception e){
+            return Optional.empty();
+        }
+    }
 }

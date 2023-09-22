@@ -1,10 +1,12 @@
 package com.hydrogarden.server.controllers;
 
+import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.services.CircuitScheduleService;
 import com.hydrogarden.server.services.CircuitService;
+import com.hydrogarden.server.services.GeneratedTaskService;
 import com.hydrogarden.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,15 +32,15 @@ public class CircuitScheduleController {
     @Autowired
     private CircuitService circuitService;
 
-
+    @Autowired
+    private GeneratedTaskService generatedTaskService;
 
     @GetMapping("")
-    public ResponseEntity<List<CircuitSchedule>> findAll() {
+    public ResponseEntity<List<CircuitScheduleDto>> findAll() {
         return Optional.ofNullable(circuitScheduleService.findAll())
-                .map(circuit -> new ResponseEntity<>(circuit, HttpStatus.OK))
+                .map(circuit -> new ResponseEntity<>(circuit.stream().map(CircuitScheduleDto::new).collect(Collectors.toList()), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
 
 
     @GetMapping("/{id}")

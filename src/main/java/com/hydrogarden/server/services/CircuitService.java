@@ -21,7 +21,7 @@ public class CircuitService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Circuit> findAll(){
+    public List<Circuit> findAll() {
         return circuitRepository.findAll();
     }
 
@@ -31,7 +31,7 @@ public class CircuitService {
 
     public List<Circuit> findByUserId(int userId) {
         User user = userRepository.findById(userId).orElse(null);
-        return user != null? circuitRepository.findByUser(user) : Collections.emptyList();
+        return user != null ? circuitRepository.findByUser(user) : Collections.emptyList();
     }
 
     public void deleteCircuit(Circuit circuitToDelete) {
@@ -41,8 +41,13 @@ public class CircuitService {
     public Circuit createCircuit(Circuit circutToCreate) {
         return circuitRepository.save(circutToCreate);
     }
+
     public Circuit updateCircuit(Circuit circuitToUpdate) {
         //todo a moze podobna walidacja jak w userservice???
         return circuitRepository.save(circuitToUpdate);
+    }
+
+    public Optional<Circuit> findByCodeAndUser(int circuitCode, User user) {
+        return circuitRepository.findCircuitByCodeAndUser(circuitCode,user);
     }
 }
