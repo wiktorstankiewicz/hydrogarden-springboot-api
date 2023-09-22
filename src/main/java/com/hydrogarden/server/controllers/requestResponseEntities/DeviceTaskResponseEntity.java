@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
-import java.lang.ref.Reference;
-
 @AllArgsConstructor
 @Data
 public class DeviceTaskResponseEntity {
@@ -19,7 +17,7 @@ public class DeviceTaskResponseEntity {
     private boolean mode;
 
     public static DeviceTaskResponseEntity fromGeneratedTaskDto(@Validated GeneratedTaskDto generatedTaskDto) {
-        int circuitCode = generatedTaskDto.getCircuit().getCode();
+        int circuitCode = generatedTaskDto.getCircuit().getCircuitCode();
         boolean mode = generatedTaskDto.isMode();
         long id = generatedTaskDto.getId();
         return new DeviceTaskResponseEntity(circuitCode, id ,mode);

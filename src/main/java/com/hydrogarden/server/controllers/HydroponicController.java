@@ -37,6 +37,7 @@ public class HydroponicController {
     private final GeneratedTaskService generatedTaskService;
     private final UserService userService;
 
+
     @GetMapping("/get-task")
     public DeferredResult<ResponseEntity<DeviceTaskResponseEntity>> getTask() {
         DeferredResult<ResponseEntity<DeviceTaskResponseEntity>> result = new DeferredResult<>();
@@ -66,7 +67,7 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),true,false,user,circuit.get()));
+            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),true,false,user,circuit.get(),null));
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>("Code not found",HttpStatus.NOT_FOUND);
@@ -77,7 +78,7 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),false,false,user,circuit.get()));
+            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),false,false,user,circuit.get(),null));
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>("Code not found",HttpStatus.NOT_FOUND);

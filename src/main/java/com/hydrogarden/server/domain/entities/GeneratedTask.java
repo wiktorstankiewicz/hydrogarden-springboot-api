@@ -3,6 +3,8 @@ package com.hydrogarden.server.domain.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -29,12 +31,19 @@ public class GeneratedTask extends AbstractEntity implements Delayed {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "circuit_id")
     private Circuit circuit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "circuit_schedule_id")
+    private CircuitSchedule circuitSchedule;
 
 
     @Override

@@ -1,12 +1,13 @@
 package com.hydrogarden.server.services;
 
-import com.hydrogarden.server.domain.entities.Circuit;
+import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import com.hydrogarden.server.domain.repositories.CircuitScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,15 +40,22 @@ public class CircuitScheduleService {
         circuitScheduleRepository.delete(circuitToDelete);
     }
 
-    public CircuitSchedule updateCircuitSchedule(CircuitSchedule circuitScheduleToUpdate) {
-        return circuitScheduleRepository.save(circuitScheduleToUpdate);
+    public CircuitScheduleDto updateCircuitSchedule(CircuitScheduleDto circuitScheduleToUpdate) {
+        CircuitSchedule circuitSchedule = circuitScheduleRepository.findById(circuitScheduleToUpdate.getId()).orElse(null);
+        if (circuitSchedule == null) {
+            return null;
+        }
+        circuitSchedule.setStartDate(circuitScheduleToUpdate.getStartDate());
+        circuitSchedule.setEndDate(circuitScheduleToUpdate.getEndDate());
+        circuitSchedule.setFrequencyDays(circuitScheduleToUpdate.getFrequencyDays());
+        circuitSchedule.setWateringTime(circuitScheduleToUpdate.getWateringTime());
+        return new CircuitScheduleDto(circuitSchedule);
     }
-
 
 
     public boolean activate(int id) {
         Optional<CircuitSchedule> optionalCircuitSchedule = circuitScheduleRepository.findById(id);
-        if(optionalCircuitSchedule.isEmpty()) return false;
+        if (optionalCircuitSchedule.isEmpty()) return false;
         CircuitSchedule circuitSchedule = optionalCircuitSchedule.get();
         circuitSchedule.setDeactivated(false);
         circuitScheduleRepository.save(circuitSchedule);
@@ -56,10 +64,50 @@ public class CircuitScheduleService {
 
     public boolean deactivate(int id) {
         Optional<CircuitSchedule> optionalCircuitSchedule = circuitScheduleRepository.findById(id);
-        if(optionalCircuitSchedule.isEmpty()) return false;
+        if (optionalCircuitSchedule.isEmpty()) return false;
         CircuitSchedule circuitSchedule = optionalCircuitSchedule.get();
         circuitSchedule.setDeactivated(true);
         circuitScheduleRepository.save(circuitSchedule);
         return true;
+    }
+
+    public CircuitSchedule updateCircuitSchedule(Integer id, LocalDate startDate, LocalDate endDate, LocalTime startTime, Integer frequencyDays, Integer wateringTime) {
+        if (id == null) {
+            return null;
+        }
+        Optional<CircuitSchedule> circuitSchedule = circuitScheduleRepository.findById(id);
+        if (circuitSchedule.isPresent()) {
+            CircuitSchedule cs = circuitSchedule.get();
+
+            if (startTime != null) {
+                cs.setStartTime(startTime);
+            }
+            if (startDate != null) {
+                cs.setStartDate(startDate);
+            }
+            if (endDate != null) {
+                cs.setEndDate(endDate);
+            }
+            if (frequencyDays != null) {
+                cs.setFrequencyDays(frequencyDays);
+            }
+            if (wateringTime != null) {
+                cs.setWateringTime(wateringTime);
+            }
+            circuitScheduleRepository.save(cs);
+            return cs;
+        }
+        return null;
+    }
+
+    public boolean deleteById(int id) {
+        try {
+            circuitScheduleRepository.deleteById(id);
+            return true;
+
+        } catch (Exception e) {
+            return false;
+
+        }
     }
 }

@@ -1,37 +1,38 @@
 package com.hydrogarden.server.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hydrogarden.server.domain.entities.Circuit;
-import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Data
 public class CircuitDto {
 
     private long id;
     @Positive
-    private int code;
+    private int circuitCode;
     @NotNull
     @NotBlank
-    private String name;
-    private long userId;
-    @NotNull
-    @JsonProperty("circuitSchedules")
-    private List<CircuitScheduleDto> circuitScheduleDtoList;
+    private String circuitName;
+    @JsonProperty("circuitSchedule")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private CircuitScheduleDto circuitSchedule;
 
 
     public CircuitDto(Circuit circuit){
         id = circuit.getId();
-        code = circuit.getCode();
-        name = circuit.getName();
-        userId = circuit.getUser().getId();
-        circuitScheduleDtoList = circuit.getCircuitSchedules().stream().map(CircuitScheduleDto::new).collect(Collectors.toList());
+        circuitCode = circuit.getCode();
+        circuitName = circuit.getName();
+        if(!circuit.getCircuitSchedules().isEmpty()){
+            circuitSchedule = new CircuitScheduleDto(circuit.getCircuitSchedules().stream().findFirst().get());
+        }else{
+            circuitSchedule = null;
+        }
     }
 
 }

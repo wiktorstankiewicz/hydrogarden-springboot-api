@@ -2,8 +2,11 @@ package com.hydrogarden.server.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.*;
 
 @Table(name = "circuit_schedule")
@@ -23,7 +26,8 @@ public class CircuitSchedule extends AbstractEntity {
 
     private boolean deactivated;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "circuit_id")
     private Circuit circuit;
 
