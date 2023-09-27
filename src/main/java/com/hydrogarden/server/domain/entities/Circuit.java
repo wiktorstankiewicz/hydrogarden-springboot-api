@@ -2,6 +2,8 @@ package com.hydrogarden.server.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,9 +19,20 @@ import java.util.List;
 @Setter
 public class Circuit extends AbstractEntity {
 
+    public static final int CIRCUIT_STATE_OFF = 0;
+
+    public static final int CIRCUIT_STATE_UNKNOWN = -1;
+
+    public static final int CIRCUIT_STATE_ON = 1;
+
     private int code;
 
     private String name;
+
+    @Min(-1)
+    @Max(1)
+    @Column(nullable = true)
+    private Integer circuitState;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)

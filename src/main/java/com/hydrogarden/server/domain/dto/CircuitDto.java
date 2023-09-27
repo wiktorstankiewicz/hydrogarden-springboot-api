@@ -23,6 +23,7 @@ public class CircuitDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private CircuitScheduleDto circuitSchedule;
 
+    private Integer circuitState;
 
     public CircuitDto(Circuit circuit){
         id = circuit.getId();
@@ -33,6 +34,7 @@ public class CircuitDto {
         }else{
             circuitSchedule = null;
         }
+        circuitState = circuit.getCircuitState();
     }
 
 }
