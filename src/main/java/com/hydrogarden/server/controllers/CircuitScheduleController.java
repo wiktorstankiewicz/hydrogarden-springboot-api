@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/circuit-schedule")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.DELETE,RequestMethod.PUT,RequestMethod.POST})
+@CrossOrigin("*")
 public class CircuitScheduleController {
 
     @Autowired
