@@ -67,7 +67,8 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),true,false,user,circuit.get(),null));
+            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),true,false,user,circuit.get(),null);
+            generatedTaskService.addTask(generatedTask);
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>("Code not found",HttpStatus.NOT_FOUND);
@@ -78,9 +79,11 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            generatedTaskService.addTask(new GeneratedTask(LocalDateTime.now(),false,false,user,circuit.get(),null));
+            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),false,false,user,circuit.get(),null);
+            generatedTaskService.addTask(generatedTask);
             return ResponseEntity.ok().build();
         }
+
         return new ResponseEntity<>("Code not found",HttpStatus.NOT_FOUND);
     }
 
@@ -88,6 +91,16 @@ public class HydroponicController {
     public ResponseEntity<?> confirmExecutionOfTask(@RequestBody int generatedTaskId){
         boolean successful = generatedTaskService.markGeneratedTaskDoneById(generatedTaskId);
         successful &= generatedTaskService.getGeneratedTaskDelayQueue().removeIf(generatedTask -> generatedTask.getId() == generatedTaskId);
+        GeneratedTask generatedTask = generatedTaskService.findById(generatedTaskId).orElse(null);
+        if(generatedTask != null){
+            Circuit circuit = generatedTask.getCircuit();
+            if(generatedTask.isMode()){
+                circuit.setCircuitState(Circuit.CIRCUIT_STATE_ON);
+            }else{
+                circuit.setCircuitState(Circuit.CIRCUIT_STATE_OFF);
+            }
+            circuitService.updateCircuit(circuit);
+        }
         if(successful){
             return ResponseEntity.ok().build();
         }else{
