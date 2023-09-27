@@ -48,12 +48,13 @@ public class GeneratedTask extends AbstractEntity implements Delayed {
 
     @Override
     public long getDelay(TimeUnit unit) {
-        long diff = LocalDateTime.now().until(datetime, ChronoUnit.SECONDS);
-        return unit.convert(diff, TimeUnit.SECONDS);
+        long diff = LocalDateTime.now().until(datetime, ChronoUnit.NANOS);
+        return unit.convert(diff, TimeUnit.NANOSECONDS);
     }
 
     @Override
     public int compareTo(Delayed o) {
-        return Math.toIntExact(getDelay(TimeUnit.SECONDS) - o.getDelay(TimeUnit.SECONDS));
+        if(o == this) return 0;
+        return Long.compare(getDelay(TimeUnit.NANOSECONDS) , o.getDelay(TimeUnit.NANOSECONDS));
     }
 }
