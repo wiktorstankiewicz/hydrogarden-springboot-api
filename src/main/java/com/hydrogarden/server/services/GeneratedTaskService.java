@@ -1,5 +1,6 @@
 package com.hydrogarden.server.services;
 
+import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import com.hydrogarden.server.domain.entities.GeneratedTask;
 import com.hydrogarden.server.domain.repositories.CircuitScheduleRepository;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.DelayQueue;
 
 @Service
@@ -98,5 +100,9 @@ public class GeneratedTaskService {
         if(!generatedTask.isDone()){
             generatedTaskDelayQueue.add(generatedTask);
         }
+    }
+
+    public Optional<GeneratedTask> findById(int generatedTaskId) {
+        return generatedTaskRepository.findById(generatedTaskId);
     }
 }
