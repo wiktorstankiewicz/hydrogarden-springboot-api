@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = {"http://wiktor:3000"}, allowCredentials = "true")
+
 @RequiredArgsConstructor
 public class AuthController {
     private final UserRepository userRepository;
@@ -38,6 +40,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequestEntity registerRequestEntity) {
+
         String encodedPassword = passwordEncoder.encode(registerRequestEntity.getPassword());
         User user = User.builder().password(encodedPassword).username(registerRequestEntity.getUsername()).role(Role.USER).build();
         try {
@@ -53,31 +56,51 @@ public class AuthController {
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestEntity loginRequestEntity, HttpServletResponse response) {
         String username = loginRequestEntity.getUsername();
         String password = loginRequestEntity.getPassword();
-
+        logger.info("/login Entry with parameters " + loginRequestEntity );
 
         User user = userRepository.findByUsername(username);
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             String token = jwtService.generateToken(new HashMap<>(), user);
             Cookie jwtCookie = new Cookie("Authorization", token);
-            jwtCookie.setSecure(true);
+            jwtCookie.setSecure(false);
             jwtCookie.setHttpOnly(true);
             jwtCookie.setMaxAge(1000);
             jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
+            logger.info("/login Password accepted, sending OK");
             return new ResponseEntity<>(HttpStatus.OK);
         }
+        logger.info("/login Password rejected, sending 400");
         return new ResponseEntity<>("Password or username is not correct", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Validated @NotNull @NotBlank @CookieValue("Authorization") Cookie jwtCookie, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("/logout Entry with parameters ");
+        if(jwtCookie == null){
+            logger.info("/logout entry without Authorization cookie, sending 400");
+            return ResponseEntity.badRequest().build();
+        }
         jwtCookie.setSecure(true);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setMaxAge(0);
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
+        logger.info("/logout returing ok with logout cookie");
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verify(@Valid @RequestBody() String token){
+        logger.info("/verify entry with token: " + token);
+        boolean valid = jwtService.isTokenValid(token);
+        if(valid){
+            logger.info("/verify token valid, sending OK");
+            return ResponseEntity.ok().build();
+        }
+        logger.info("/verify token invalid, sending 404");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
