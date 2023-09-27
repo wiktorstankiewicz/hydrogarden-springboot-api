@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/circuit")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class CircuitController {
     @Autowired
     private CircuitService circuitService;
@@ -28,6 +28,16 @@ public class CircuitController {
     private UserService userService;
 
 
+    @PostMapping("/rename")
+    public ResponseEntity<?> renameCircuit(@RequestBody RenameCircuitRequest body){
+        Optional<Circuit> circuit = circuitService.findById(body.getId());
+        if(circuit.isPresent()){
+            circuit.get().setName(body.getCircuitName());
+            circuitService.updateCircuit(circuit.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     @GetMapping("/user/{id}")
     public List<Circuit> findByUserId(@PathVariable int id) {
