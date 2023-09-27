@@ -20,7 +20,12 @@ public class JwtService {
     public static int EXPIRATION_TIME = 1000*60*24;
     public static String SIGNING_KEY = "2914FD4E2914FD4ED6AB7B61577AFACABA9D9D6AB7B61577AF2914FD4ED6AB7B61577AFACABA9D9ACABA9D9";
     public boolean isTokenValid(String jwt){
-        return Jwts.parser().setSigningKey(getSigningKey()).isSigned(jwt);
+         try{
+             Jwts.parser().setSigningKey(getSigningKey()).parse(jwt);
+         }catch(Exception e){
+             return false;
+         }
+         return true;
     }
     public String extractUsername(String jwt){
         return extractClaim(jwt,Claims::getSubject);
