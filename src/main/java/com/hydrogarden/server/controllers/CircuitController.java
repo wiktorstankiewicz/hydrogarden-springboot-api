@@ -1,13 +1,11 @@
 package com.hydrogarden.server.controllers;
 
-import com.hydrogarden.server.controllers.requestResponseEntities.CircuitInfoResponse;
+import com.hydrogarden.server.controllers.requestResponseEntities.RenameCircuitRequest;
 import com.hydrogarden.server.domain.dto.CircuitDto;
-import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.services.CircuitService;
 import com.hydrogarden.server.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/circuit")
