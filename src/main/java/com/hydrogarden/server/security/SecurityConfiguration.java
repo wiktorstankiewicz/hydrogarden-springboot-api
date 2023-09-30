@@ -77,7 +77,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://wiktor:3000", "https://wiktor:3000", "http://localhost:3000", "https://localhost:3000", "http://srv21.mikr.us:30437", "https://srv21.mikr.us:30437", "http://172.17.0.1:30437"));
+        configuration.setAllowedOrigins(Arrays.asList("http://wiktor:3000", "https://wiktor:3000", "http://localhost:3000", "https://localhost:3000", "http://srv21.mikr.us:20437", "https://srv21.mikr.us:20437", "http://172.17.0.1:30437"));
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowCredentials(true);
