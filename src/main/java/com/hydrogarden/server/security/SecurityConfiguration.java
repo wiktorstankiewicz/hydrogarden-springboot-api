@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/auth/**", "/error/**","/v2/api-docs/**","/hydroponic/**").permitAll()
+                    request.requestMatchers("/api/auth/**", "/api/error/**","/api/v2/api-docs/**","/api/hydroponic/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .authenticationManager(authenticationManager())
