@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("USER")
+    @ColumnDefault(value = "'USER'")
     private Role role;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
