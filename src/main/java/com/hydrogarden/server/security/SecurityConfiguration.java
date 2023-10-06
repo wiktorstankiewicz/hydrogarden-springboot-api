@@ -2,23 +2,16 @@ package com.hydrogarden.server.security;
 
 import com.hydrogarden.server.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,13 +22,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+    private static final Logger logger = Logger.getLogger(SecurityConfiguration.class.getName());
     private final JwtAuthFilter jwtAuthFilter;
     private final UserService userService;
+    private final Environment environment;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,7 +41,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/api/auth/**", "/api/error/**","/api/v2/api-docs/**","/api/hydroponic/**").permitAll()
+                    request.requestMatchers("/auth/**", "/error/**", "/v2/api-docs/**", "/hydroponic/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .authenticationManager(authenticationManager())
@@ -53,9 +49,6 @@ public class SecurityConfiguration {
                 .build();
 
     }
-
-
-
 
 
     @Bean
@@ -67,22 +60,30 @@ public class SecurityConfiguration {
     }
 
 
-
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        List<String> allowedOrigins;
+        String allowedOriginsEnvVar = environment.getProperty("HYDROGARDEN_API_ALLOWED_ORIGINS");
+        if (allowedOriginsEnvVar == null || allowedOriginsEnvVar.equals("")) {
+            logger.warning("${HYDROGARDEN_API_ALLOWED_ORIGINS} was not properly defined. Using empty array instead");
+            allowedOrigins = List.of();
+        } else {
+            allowedOrigins = Arrays.stream(allowedOriginsEnvVar.split(";")).toList();
+            logger.info("Loaded allowed origins: " + allowedOriginsEnvVar);
+        }
+
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://ogrod.bieda.it","http://ogrod.bieda.it","http://wiktor:3000", "https://wiktor:3000", "http://localhost:3000", "https://localhost:3000", "http://srv21.mikr.us:20437", "https://srv21.mikr.us:20437", "http://172.17.0.1:30437"));
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "X-Auth-Token","Authorization","Access-Control-Allow-Origin","Access-Control-Allow-Credentials"));
-        configuration.setExposedHeaders(Arrays.asList("Content-Type", "X-Auth-Token","Authorization","Access-Control-Allow-Origin","Access-Control-Allow-Credentials"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "X-Auth-Token", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+        configuration.setExposedHeaders(Arrays.asList("Content-Type", "X-Auth-Token", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
