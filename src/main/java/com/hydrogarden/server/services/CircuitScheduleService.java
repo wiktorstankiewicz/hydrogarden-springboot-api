@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CircuitScheduleService {
@@ -28,12 +29,12 @@ public class CircuitScheduleService {
         circuitScheduleRepository.deleteAll();
     }
 
-    public List<CircuitSchedule> findAll() {
-        return circuitScheduleRepository.findAll();
+    public List<CircuitScheduleDto> findAll() {
+        return circuitScheduleRepository.findAll().stream().map(CircuitScheduleDto::new).collect(Collectors.toList());
     }
 
-    public CircuitSchedule createCircuitSchedule(CircuitSchedule circuitScheduleToCreate) {
-        return circuitScheduleRepository.save(circuitScheduleToCreate);
+    public CircuitScheduleDto createCircuitSchedule(CircuitScheduleDto circuitScheduleToCreate) {
+        return new CircuitScheduleDto(circuitScheduleRepository.save(new CircuitSchedule(circuitScheduleToCreate)));
     }
 
     public void deleteCircuitSchedule(CircuitSchedule circuitToDelete) {
@@ -49,6 +50,7 @@ public class CircuitScheduleService {
         circuitSchedule.setEndDate(circuitScheduleToUpdate.getEndDate());
         circuitSchedule.setFrequencyDays(circuitScheduleToUpdate.getFrequencyDays());
         circuitSchedule.setWateringTime(circuitScheduleToUpdate.getWateringTime());
+        circuitScheduleRepository.save(circuitSchedule);
         return new CircuitScheduleDto(circuitSchedule);
     }
 
@@ -71,7 +73,7 @@ public class CircuitScheduleService {
         return true;
     }
 
-    public CircuitSchedule updateCircuitSchedule(Integer id, LocalDate startDate, LocalDate endDate, LocalTime startTime, Integer frequencyDays, Integer wateringTime) {
+    public CircuitScheduleDto updateCircuitSchedule(Integer id, LocalDate startDate, LocalDate endDate, LocalTime startTime, Integer frequencyDays, Integer wateringTime) {
         if (id == null) {
             return null;
         }
@@ -95,7 +97,7 @@ public class CircuitScheduleService {
                 cs.setWateringTime(wateringTime);
             }
             circuitScheduleRepository.save(cs);
-            return cs;
+            return new CircuitScheduleDto(cs);
         }
         return null;
     }

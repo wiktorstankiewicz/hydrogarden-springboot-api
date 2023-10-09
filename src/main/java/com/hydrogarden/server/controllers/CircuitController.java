@@ -1,6 +1,6 @@
 package com.hydrogarden.server.controllers;
 
-import com.hydrogarden.server.controllers.requestResponseEntities.RenameCircuitRequest;
+import com.hydrogarden.server.controllers.requestResponseEntities.RenameCircuitDTO;
 import com.hydrogarden.server.domain.dto.CircuitDto;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
@@ -26,7 +26,7 @@ public class CircuitController {
 
 
     @PostMapping("/rename")
-    public ResponseEntity<?> renameCircuit(@RequestBody RenameCircuitRequest body){
+    public ResponseEntity<?> renameCircuit(@RequestBody RenameCircuitDTO body){
         Optional<Circuit> circuit = circuitService.findById(body.getId());
         if(circuit.isPresent()){
             circuit.get().setName(body.getCircuitName());

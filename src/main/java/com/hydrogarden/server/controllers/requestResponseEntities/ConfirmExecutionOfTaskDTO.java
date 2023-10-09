@@ -1,5 +1,6 @@
 package com.hydrogarden.server.controllers.requestResponseEntities;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ConfirmExecutionOfTaskRequestBody {
-    private int id;
+public class ConfirmExecutionOfTaskDTO {
+    @NotNull
+    private Integer id;
 }

@@ -5,6 +5,7 @@ import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -18,9 +19,11 @@ import java.util.Date;
 
 @Data
 public class CircuitScheduleDto {
+
+    @NotNull
+    private Integer id;
     @NotNull
     @JsonFormat(pattern = "hh:mm")
-
     private LocalTime startTime;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -32,15 +35,19 @@ public class CircuitScheduleDto {
 
     @Positive
     @Max(365)
-    private int frequencyDays;
+    @NotNull
+    private Integer frequencyDays;
 
     @Positive
     @Min(5)
     @Max(24*60*60)
-    private int wateringTime;
-    private boolean deactivated;
-
-    private int id;
+    @NotNull
+    private Integer wateringTime;
+    @NotNull
+    private Boolean deactivated;
+    @Valid
+    @NotNull
+    private CircuitDto circuitDto;
 
     public CircuitScheduleDto(CircuitSchedule cs) {
         startTime = cs.getStartTime();
@@ -50,5 +57,7 @@ public class CircuitScheduleDto {
         wateringTime = cs.getWateringTime();
         deactivated = cs.isDeactivated();
         id = cs.getId();
+        circuitDto = new CircuitDto(cs.getCircuit());
     }
+
 }

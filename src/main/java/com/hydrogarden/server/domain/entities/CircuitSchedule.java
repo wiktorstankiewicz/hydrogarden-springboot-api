@@ -1,5 +1,6 @@
 package com.hydrogarden.server.domain.entities;
 
+import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -31,4 +32,13 @@ public class CircuitSchedule extends AbstractEntity {
     @JoinColumn(name = "circuit_id")
     private Circuit circuit;
 
+    public CircuitSchedule(CircuitScheduleDto dto) {
+        this.startTime = dto.getStartTime();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.frequencyDays = dto.getFrequencyDays();
+        this.wateringTime = dto.getWateringTime();
+        this.deactivated = dto.isDeactivated();
+        this.circuit = Circuit.fromCircuitDto(dto.getCircuitDto());
+    }
 }

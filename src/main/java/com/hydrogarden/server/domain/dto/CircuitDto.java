@@ -12,10 +12,11 @@ import java.util.Objects;
 
 @Data
 public class CircuitDto {
-
-    private long id;
+    @NotNull
+    private Long id;
     @Positive
-    private int circuitCode;
+    @NotNull
+    private Integer circuitCode;
     @NotNull
     @NotBlank
     private String circuitName;
@@ -26,7 +27,7 @@ public class CircuitDto {
     private Integer circuitState;
 
     public CircuitDto(Circuit circuit){
-        id = circuit.getId();
+        id = Long.valueOf(circuit.getId());
         circuitCode = circuit.getCode();
         circuitName = circuit.getName();
         if(!circuit.getCircuitSchedules().isEmpty()){

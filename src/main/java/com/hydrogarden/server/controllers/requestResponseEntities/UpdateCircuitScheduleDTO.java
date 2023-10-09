@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-public class UpdateCircuitScheduleRequest {
+public class UpdateCircuitScheduleDTO {
     @JsonProperty()
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id;

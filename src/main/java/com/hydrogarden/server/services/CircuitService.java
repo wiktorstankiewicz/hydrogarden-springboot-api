@@ -1,5 +1,7 @@
 package com.hydrogarden.server.services;
 
+import com.hydrogarden.server.domain.dto.CircuitDto;
+import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.domain.repositories.CircuitRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,8 +24,8 @@ public class CircuitService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Circuit> findAll() {
-        return circuitRepository.findAll();
+    public List<CircuitDto> findAll() {
+        return circuitRepository.findAll().stream().map(CircuitDto::new).collect(Collectors.toList());
     }
 
     public Optional<Circuit> findById(int id) {

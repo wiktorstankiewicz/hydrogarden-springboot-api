@@ -1,24 +1,19 @@
 package com.hydrogarden.server.controllers;
 
 
-import com.hydrogarden.server.controllers.requestResponseEntities.ConfirmExecutionOfTaskRequestBody;
-import com.hydrogarden.server.controllers.requestResponseEntities.DeviceTaskResponseEntity;
+import com.hydrogarden.server.controllers.requestResponseEntities.DeviceTaskDTO;
 import com.hydrogarden.server.domain.dto.GeneratedTaskDto;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.GeneratedTask;
 import com.hydrogarden.server.domain.entities.User;
-import com.hydrogarden.server.domain.repositories.UserRepository;
 import com.hydrogarden.server.services.CircuitService;
 import com.hydrogarden.server.services.GeneratedTaskService;
 import com.hydrogarden.server.services.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -39,8 +34,8 @@ public class HydroponicController {
 
 
     @GetMapping("/get-task")
-    public DeferredResult<ResponseEntity<DeviceTaskResponseEntity>> getTask() {
-        DeferredResult<ResponseEntity<DeviceTaskResponseEntity>> result = new DeferredResult<>();
+    public DeferredResult<ResponseEntity<DeviceTaskDTO>> getTask() {
+        DeferredResult<ResponseEntity<DeviceTaskDTO>> result = new DeferredResult<>();
         DelayQueue<GeneratedTask> taskQueue =  generatedTaskService.getGeneratedTaskDelayQueue();
         try {
             GeneratedTask task = taskQueue.poll(30,TimeUnit.MINUTES);
@@ -49,7 +44,7 @@ public class HydroponicController {
                 result.setErrorResult(ResponseEntity.notFound().build());
             }else{
                 GeneratedTaskDto generatedTaskDto = new GeneratedTaskDto(task);
-                result.setResult(ResponseEntity.ok().body(DeviceTaskResponseEntity.fromGeneratedTaskDto(generatedTaskDto)));
+                result.setResult(ResponseEntity.ok().body(DeviceTaskDTO.fromGeneratedTaskDto(generatedTaskDto)));
                 taskQueue.put(task);
                 //generatedTaskService.markGeneratedTaskDoneById(generatedTaskDto.getId());
             }
