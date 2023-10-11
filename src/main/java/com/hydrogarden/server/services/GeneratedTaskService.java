@@ -69,8 +69,8 @@ public class GeneratedTaskService {
             currentStartDateTime = currentStartDateTime.plusDays(frequencyDays);
         }
         while(currentStartDateTime.isBefore(endDate.atTime(LocalTime.MAX))){
-            GeneratedTask generatedStartTask = new GeneratedTask(currentStartDateTime,true,false,circuitSchedule.getCircuit().getUser(), circuitSchedule.getCircuit(),circuitSchedule);
-            GeneratedTask generatedEndTask = new GeneratedTask(currentStartDateTime.plusSeconds(circuitSchedule.getWateringTime()),false,false,circuitSchedule.getCircuit().getUser(), circuitSchedule.getCircuit(),circuitSchedule);
+            GeneratedTask generatedStartTask = new GeneratedTask(currentStartDateTime,true,false,circuitSchedule);
+            GeneratedTask generatedEndTask = new GeneratedTask(currentStartDateTime.plusSeconds(circuitSchedule.getWateringTime()),false,false,circuitSchedule);
             generatedTaskList.add(generatedStartTask);
             generatedTaskList.add(generatedEndTask);
             currentStartDateTime = currentStartDateTime.plusDays(frequencyDays);

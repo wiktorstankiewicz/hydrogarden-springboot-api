@@ -29,7 +29,7 @@ public class CircuitController {
 
     @PostMapping("/rename")
     public ResponseEntity<?> renameCircuit(@RequestBody RenameCircuitDTO body){
-        Optional<Circuit> circuit = circuitService.findById(body.getId());
+        Optional<CircuitDTO> circuit = circuitService.findById(body.getId());
         if(circuit.isPresent()){
             circuit.get().setName(body.getCircuitName());
             circuitService.updateCircuit(circuit.get());
@@ -39,7 +39,7 @@ public class CircuitController {
     }
 
     @GetMapping("/user/{id}")
-    public List<Circuit> findByUserId(@PathVariable int id) {
+    public List<CircuitDTO> findByUserId(@PathVariable int id) {
         return circuitService.findByUserId(id);
     }
 
@@ -56,7 +56,7 @@ public class CircuitController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Circuit> updateCircuit(@NonNull @RequestBody Circuit circuitToUpdate) {
+    public ResponseEntity<CircuitDTO> updateCircuit(@NonNull @RequestBody CircuitDTO circuitToUpdate) {
         return Optional.of(circuitService.updateCircuit(circuitToUpdate))
                 .map(circuit -> new ResponseEntity<>(circuit, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -66,12 +66,12 @@ public class CircuitController {
     public ResponseEntity<List<CircuitDTO>> find(@RequestParam(value = "circuitId", required = false) Integer circuitId) {
         User user = userService.findByUsername("admin").get();
         if (circuitId == null) {
-            List<Circuit> circuits = circuitService.findByUserId((int) user.getId());
-            return ResponseEntity.ok(circuits.stream().map(circuit -> new CircuitDTO(circuit,new UserDTO(circuit.getUser()),new CircuitScheduleDTO(circuit.getCircuitSchedule(),new UserDTO(circuit.getUser())))).toList());
+            List<CircuitDTO> circuits = circuitService.findByUserId((int) user.getId());
+            return ResponseEntity.ok(circuits);
         }
 
-        Optional<Circuit> circuit = circuitService.findById(circuitId);
-        return circuit.map(value -> ResponseEntity.ok(List.of(new CircuitDTO(value,new UserDTO(value.getUser()),new CircuitScheduleDTO(value.getCircuitSchedule(),new UserDTO(value.getUser())))))).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<CircuitDTO> circuit = circuitService.findById(circuitId);
+        return circuit.map(value -> ResponseEntity.ok(List.of(value))).orElse(ResponseEntity.notFound().build());
     }
 
 }

@@ -12,9 +12,8 @@ VALUES ( 1,'Pomidory',1 ),
        ( 3,'Konopie',1 ),
        ( 4,'Sałata',1 ),
        ( 5,'Papryka',1 ),
-       ( 6,'Rzodkiewki',1 ),
-       ( 7,'Maliny',1 ),
-       ( 8,'Truskawki',1 );
+       ( 6,'Rzodkiewki',1 );
+
 
 INSERT INTO circuit_schedule (deactivated,start_date, end_date, frequency_days,  start_time, watering_time, circuit_id)
 VALUES

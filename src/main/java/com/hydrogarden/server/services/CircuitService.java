@@ -3,6 +3,7 @@ package com.hydrogarden.server.services;
 import com.hydrogarden.server.domain.dto.CircuitDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.domain.mappers.CircuitMapper;
 import com.hydrogarden.server.domain.repositories.CircuitRepository;
 import com.hydrogarden.server.domain.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,13 +25,17 @@ public class CircuitService {
     private UserRepository userRepository;
 
 
-    public Optional<Circuit> findById(int id) {
-        return circuitRepository.findById(id);
+    public Optional<CircuitDTO> findById(int id) {
+        return circuitRepository.findById(id)
+                .map(circuit -> CircuitMapper.fromEntity(circuit));
     }
 
-    public List<Circuit> findByUserId(int userId) {
+    public List<CircuitDTO> findByUserId(int userId) {
         User user = userRepository.findById(userId).orElse(null);
-        return user != null ? circuitRepository.findByUser(user) : Collections.emptyList();
+        return user != null ? circuitRepository.findByUser(user).stream()
+                .map(circuit -> CircuitMapper.fromEntity(circuit))
+                .collect(Collectors.toList())
+                : Collections.emptyList();
     }
 
     public void deleteCircuit(Circuit circuitToDelete) {
@@ -41,9 +46,9 @@ public class CircuitService {
         return circuitRepository.save(circutToCreate);
     }
 
-    public Circuit updateCircuit(Circuit circuitToUpdate) {
+    public CircuitDTO updateCircuit(CircuitDTO circuitToUpdate) {
         //todo a moze podobna walidacja jak w userservice???
-        return circuitRepository.save(circuitToUpdate);
+        return CircuitMapper.fromEntity(circuitRepository.save(CircuitMapper.fromDTO(circuitToUpdate)));
     }
 
     public Optional<Circuit> findByCodeAndUser(int circuitCode, User user) {

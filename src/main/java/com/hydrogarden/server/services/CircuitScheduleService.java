@@ -27,8 +27,7 @@ public class CircuitScheduleService {
 
     public Optional<CircuitScheduleDTO> findById(int id) {
         return circuitScheduleRepository.findById(id).
-                map(circuitSchedule -> CircuitScheduleMapper.fromEntity(circuitSchedule, CircuitMapper.fromEntity(circuitSchedule.getCircuit(),
-                        UserMapper.fromEntity(circuitSchedule.getCircuit().getUser()))));
+                map(circuitSchedule -> CircuitScheduleMapper.fromEntity(circuitSchedule));
     }
 
     public void deleteAll() {
@@ -36,15 +35,17 @@ public class CircuitScheduleService {
     }
 
     public List<CircuitScheduleDTO> findAll() {
-        return circuitScheduleRepository.findAll().stream().map(circuitSchedule -> new CircuitScheduleDTO(circuitSchedule, new UserDTO(circuitSchedule.getCircuit().getUser()))).collect(Collectors.toList());
+        return circuitScheduleRepository.findAll().stream()
+                .map(circuitSchedule -> CircuitScheduleMapper.fromEntity(circuitSchedule))
+                .collect(Collectors.toList());
     }
 
     public CircuitScheduleDTO create(CircuitScheduleDTO dto) {
-        return new CircuitScheduleDTO(circuitScheduleRepository.save()
+        return CircuitScheduleMapper.fromEntity(circuitScheduleRepository.save(CircuitScheduleMapper.fromDTO(dto)));
     }
 
     public void delete(CircuitScheduleDTO circuitToDelete) {
-        circuitScheduleRepository.delete(CircuitSchedule.fromCircuitScheduleDTO(circuitToDelete));
+        circuitScheduleRepository.delete(CircuitScheduleMapper.fromDTO(circuitToDelete));
     }
 
 
@@ -90,7 +91,7 @@ public class CircuitScheduleService {
                 cs.setWateringTime(wateringTime);
             }
             circuitScheduleRepository.save(cs);
-            return new CircuitScheduleDTO(cs, new UserDTO(cs.getCircuit().getUser()));
+            return CircuitScheduleMapper.fromEntity(cs);
         }
         return null;
     }

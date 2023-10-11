@@ -1,5 +1,6 @@
 package com.hydrogarden.server.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ public class CircuitDTO {
 
     @NotNull
     @Valid
+    @JsonIgnore
     private UserDTO user;
 
 

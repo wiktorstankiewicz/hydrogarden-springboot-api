@@ -2,14 +2,28 @@ package com.hydrogarden.server.domain.mappers;
 
 import com.hydrogarden.server.domain.dto.CircuitDTO;
 import com.hydrogarden.server.domain.dto.CircuitScheduleDTO;
+import com.hydrogarden.server.domain.dto.UserDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
+import com.hydrogarden.server.domain.entities.User;
 
 import java.util.stream.Collectors;
 
 public class CircuitScheduleMapper {
 
-    public static CircuitSchedule fromDTO(CircuitScheduleDTO circuitScheduleDTO, Circuit circuit) {
+    public static CircuitSchedule fromDTO(CircuitScheduleDTO circuitScheduleDTO){
+        User user = UserMapper.fromDTO(circuitScheduleDTO.getCircuit().getUser());
+        Circuit circuit = CircuitMapper.fromDTO(circuitScheduleDTO.getCircuit(), user);
+        return fromDTO(circuitScheduleDTO, circuit);
+    }
+
+    public static CircuitScheduleDTO fromEntity(CircuitSchedule circuitSchedule){
+        UserDTO userDTO = UserMapper.fromEntity(circuitSchedule.getCircuit().getUser());
+        CircuitDTO circuitDTO = CircuitMapper.fromEntity(circuitSchedule.getCircuit(),userDTO);
+        return fromEntity(circuitSchedule,circuitDTO);
+    }
+
+     static CircuitSchedule fromDTO(CircuitScheduleDTO circuitScheduleDTO, Circuit circuit) {
         CircuitSchedule circuitSchedule = new CircuitSchedule();
         circuitSchedule.setId(circuitScheduleDTO.getId());
         circuitSchedule.setStartTime(circuitScheduleDTO.getStartTime());
@@ -25,7 +39,7 @@ public class CircuitScheduleMapper {
         return circuitSchedule;
     }
 
-    public static CircuitScheduleDTO fromEntity(CircuitSchedule circuitSchedule, CircuitDTO circuitDTO) {
+     static CircuitScheduleDTO fromEntity(CircuitSchedule circuitSchedule, CircuitDTO circuitDTO) {
         CircuitScheduleDTO circuitScheduleDTO = new CircuitScheduleDTO();
         circuitScheduleDTO.setId(circuitSchedule.getId());
         circuitScheduleDTO.setStartTime(circuitSchedule.getStartTime());

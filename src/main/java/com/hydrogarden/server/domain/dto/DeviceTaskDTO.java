@@ -16,9 +16,18 @@ public class DeviceTaskDTO {
     private Integer circuitCode;
 
     @NotNull
-    private Long generatedTaskId;
+    private Integer generatedTaskId;
 
     @NotNull
     private Boolean mode;
 
+    public static DeviceTaskDTO fromGeneratedTaskDto(GeneratedTaskDTO generatedTaskDto)
+    {
+        DeviceTaskDTO deviceTaskDTO = new DeviceTaskDTO(
+                generatedTaskDto.getCircuitSchedule().getCircuit().getCode(),
+                generatedTaskDto.getId(),
+                generatedTaskDto.getMode()
+        );
+        return deviceTaskDTO;
+    }
 }

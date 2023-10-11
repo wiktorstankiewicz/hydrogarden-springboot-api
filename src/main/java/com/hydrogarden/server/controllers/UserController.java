@@ -2,6 +2,7 @@ package com.hydrogarden.server.controllers;
 
 import com.hydrogarden.server.domain.dto.UserDTO;
 import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.domain.mappers.UserMapper;
 import com.hydrogarden.server.exceptions.UsernameTakenException;
 import com.hydrogarden.server.services.UserService;
 import org.slf4j.Logger;
@@ -27,13 +28,13 @@ public class UserController {
 
     @GetMapping("/all")
     public List<UserDTO> findAll() {
-        return userService.findAll().stream().map(UserDTO::new).collect(Collectors.toList());
+        return userService.findAll().stream().map(user -> UserMapper.fromEntity(user)).collect(Collectors.toList());
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> get(@AuthenticationPrincipal User principal) {
         return userService.findById((int) principal.getId())
-                .map(user -> new ResponseEntity<>(new UserDTO(user), HttpStatus.OK))
+                .map(user -> new ResponseEntity<>(UserMapper.fromEntity(user), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

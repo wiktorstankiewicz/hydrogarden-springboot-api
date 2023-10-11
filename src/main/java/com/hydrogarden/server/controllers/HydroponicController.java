@@ -6,6 +6,8 @@ import com.hydrogarden.server.domain.dto.GeneratedTaskDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.GeneratedTask;
 import com.hydrogarden.server.domain.entities.User;
+import com.hydrogarden.server.domain.mappers.CircuitMapper;
+import com.hydrogarden.server.domain.mappers.GeneratedTaskMapper;
 import com.hydrogarden.server.services.CircuitService;
 import com.hydrogarden.server.services.GeneratedTaskService;
 import com.hydrogarden.server.services.UserService;
@@ -43,7 +45,7 @@ public class HydroponicController {
             if(task == null){
                 result.setErrorResult(ResponseEntity.notFound().build());
             }else{
-                GeneratedTaskDTO generatedTaskDto = new GeneratedTaskDTO(task);
+                GeneratedTaskDTO generatedTaskDto = GeneratedTaskMapper.fromEntity(task);
                 result.setResult(ResponseEntity.ok().body(DeviceTaskDTO.fromGeneratedTaskDto(generatedTaskDto)));
                 taskQueue.put(task);
                 //generatedTaskService.markGeneratedTaskDoneById(generatedTaskDto.getId());
@@ -62,7 +64,7 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),true,false,user,circuit.get(),null);
+            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),true,false,null);
             generatedTaskService.addTask(generatedTask);
             return ResponseEntity.ok().build();
         }
@@ -74,7 +76,7 @@ public class HydroponicController {
         User user = userService.findByUsername("admin").get();
         Optional<Circuit> circuit = circuitService.findByCodeAndUser(code, user);
         if(circuit.isPresent()){
-            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),false,false,user,circuit.get(),null);
+            GeneratedTask generatedTask = new GeneratedTask(LocalDateTime.now(),false,false,null);
             generatedTaskService.addTask(generatedTask);
             return ResponseEntity.ok().build();
         }
@@ -88,13 +90,8 @@ public class HydroponicController {
         successful &= generatedTaskService.getGeneratedTaskDelayQueue().removeIf(generatedTask -> generatedTask.getId() == generatedTaskId);
         GeneratedTask generatedTask = generatedTaskService.findById(generatedTaskId).orElse(null);
         if(generatedTask != null){
-            Circuit circuit = generatedTask.getCircuit();
-            if(generatedTask.isMode()){
-                circuit.setCircuitState(Circuit.CIRCUIT_STATE_ON);
-            }else{
-                circuit.setCircuitState(Circuit.CIRCUIT_STATE_OFF);
-            }
-            circuitService.updateCircuit(circuit);
+            Circuit circuit = generatedTask.getCircuitSchedule().getCircuit();
+            circuitService.updateCircuit(CircuitMapper.fromEntity( circuit));
         }
         if(successful){
             return ResponseEntity.ok().build();

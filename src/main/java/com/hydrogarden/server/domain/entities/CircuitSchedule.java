@@ -32,5 +32,6 @@ public class CircuitSchedule extends AbstractEntity {
     private Circuit circuit;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "circuit_schedule_id")
     private List<GeneratedTask> generatedTasks;
 }
