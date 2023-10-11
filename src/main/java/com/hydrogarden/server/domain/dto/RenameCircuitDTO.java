@@ -1,4 +1,4 @@
-package com.hydrogarden.server.controllers.requestResponseEntities;
+package com.hydrogarden.server.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

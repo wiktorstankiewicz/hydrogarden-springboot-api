@@ -1,6 +1,7 @@
 package com.hydrogarden.server.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hydrogarden.server.domain.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user",
@@ -38,6 +40,18 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GeneratedTask> generatedTasks;
+
+    public static User fromUserDTO(UserDTO dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setId(dto.getId());
+        user.setRole(dto.getRole());
+        user.setCircuits(dto.getCircuits().stream().map(Circuit::fromCircuitDto).collect(Collectors.toList()));
+        user.setGeneratedTasks(dto.getGeneratedTasks().stream().map(GeneratedTask::fromGeneratedTaskDTO).collect(Collectors.toList()));
+        return user;
+
+    }
 
 
     @Override

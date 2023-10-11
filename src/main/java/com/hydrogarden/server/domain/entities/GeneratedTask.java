@@ -1,6 +1,7 @@
 package com.hydrogarden.server.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hydrogarden.server.domain.dto.GeneratedTaskDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -44,6 +45,16 @@ public class GeneratedTask extends AbstractEntity implements Delayed {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "circuit_schedule_id")
     private CircuitSchedule circuitSchedule;
+
+    public static GeneratedTask fromGeneratedTaskDTO(GeneratedTaskDTO dto) {
+        GeneratedTask generatedTask = new GeneratedTask();
+        generatedTask.setDatetime(dto.getDateTime());
+        generatedTask.setMode(dto.getMode());
+        generatedTask.setDone(dto.getDone());
+        generatedTask.setUser(User.fromUserDTO(dto.getUserDTO()));
+        generatedTask.setCircuit(Circuit.fromCircuitDto(dto.getCircuitDTO()));
+        return generatedTask;
+    }
 
 
     @Override

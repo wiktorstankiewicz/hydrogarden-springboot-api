@@ -1,13 +1,12 @@
-package com.hydrogarden.server.controllers.requestResponseEntities;
+package com.hydrogarden.server.domain.dto;
 
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
 @Data
-public class UserLoginDTO {
+public class RegisterUserDTO {
     @NotNull
     @NotBlank
     private String username;

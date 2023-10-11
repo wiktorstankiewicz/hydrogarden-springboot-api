@@ -1,6 +1,5 @@
-package com.hydrogarden.server.controllers.requestResponseEntities;
+package com.hydrogarden.server.domain.dto;
 
-import com.hydrogarden.server.domain.dto.GeneratedTaskDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -22,9 +21,9 @@ public class DeviceTaskDTO {
     @NotNull
     private Boolean mode;
 
-    public static DeviceTaskDTO fromGeneratedTaskDto(@Valid GeneratedTaskDto generatedTaskDto) {
-        int circuitCode = generatedTaskDto.getCircuit().getCircuitCode();
-        boolean mode = generatedTaskDto.isMode();
+    public static DeviceTaskDTO fromGeneratedTaskDto(@Valid GeneratedTaskDTO generatedTaskDto) {
+        int circuitCode = generatedTaskDto.getCircuitDTO().getCircuitCode();
+        boolean mode = generatedTaskDto.getMode();
         long id = generatedTaskDto.getId();
         return new DeviceTaskDTO(circuitCode, id ,mode);
     }

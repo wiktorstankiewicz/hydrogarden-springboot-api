@@ -1,8 +1,8 @@
 package com.hydrogarden.server.controllers;
 
 
-import com.hydrogarden.server.controllers.requestResponseEntities.DeviceTaskDTO;
-import com.hydrogarden.server.domain.dto.GeneratedTaskDto;
+import com.hydrogarden.server.domain.dto.DeviceTaskDTO;
+import com.hydrogarden.server.domain.dto.GeneratedTaskDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.GeneratedTask;
 import com.hydrogarden.server.domain.entities.User;
@@ -43,7 +43,7 @@ public class HydroponicController {
             if(task == null){
                 result.setErrorResult(ResponseEntity.notFound().build());
             }else{
-                GeneratedTaskDto generatedTaskDto = new GeneratedTaskDto(task);
+                GeneratedTaskDTO generatedTaskDto = new GeneratedTaskDTO(task);
                 result.setResult(ResponseEntity.ok().body(DeviceTaskDTO.fromGeneratedTaskDto(generatedTaskDto)));
                 taskQueue.put(task);
                 //generatedTaskService.markGeneratedTaskDoneById(generatedTaskDto.getId());

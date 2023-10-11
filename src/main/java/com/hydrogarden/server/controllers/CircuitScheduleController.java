@@ -1,7 +1,7 @@
 package com.hydrogarden.server.controllers;
 
-import com.hydrogarden.server.controllers.requestResponseEntities.UpdateCircuitScheduleDTO;
-import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
+import com.hydrogarden.server.domain.dto.UpdateCircuitScheduleDTO;
+import com.hydrogarden.server.domain.dto.CircuitScheduleDTO;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
 import com.hydrogarden.server.services.CircuitScheduleService;
 import com.hydrogarden.server.services.CircuitService;
@@ -34,14 +34,14 @@ public class CircuitScheduleController {
     private GeneratedTaskService generatedTaskService;
 
     @GetMapping("")
-    public ResponseEntity<List<CircuitScheduleDto>> findAll() {
+    public ResponseEntity<List<CircuitScheduleDTO>> findAll() {
         return ResponseEntity.ok(circuitScheduleService.findAll());
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<CircuitSchedule> findById(@PathVariable int id) {
-        return circuitScheduleService.findScheduleById(id)
+    public ResponseEntity<CircuitScheduleDTO> findById(@PathVariable int id) {
+        return circuitScheduleService.findById(id)
                 .map(circuit -> new ResponseEntity<>(circuit, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -57,16 +57,16 @@ public class CircuitScheduleController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CircuitScheduleDto> createCircuitSchedule(@NonNull @RequestBody CircuitScheduleDto circuitScheduleToCreate) {
-        return Optional.of(circuitScheduleService.createCircuitSchedule(circuitScheduleToCreate))
+    public ResponseEntity<CircuitScheduleDTO> createCircuitSchedule(@NonNull @RequestBody CircuitScheduleDTO circuitScheduleToCreate) {
+        return Optional.of(circuitScheduleService.create(circuitScheduleToCreate))
                 .map(circuit -> new ResponseEntity<>(circuit, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<CircuitScheduleDto> updateCircuit(@NonNull @RequestBody UpdateCircuitScheduleDTO body) {
+    public ResponseEntity<CircuitScheduleDTO> updateCircuit(@NonNull @RequestBody UpdateCircuitScheduleDTO body) {
         return Optional.of(circuitScheduleService.updateCircuitSchedule(body.getId(), body.getStartDate(), body.getEndDate(), body.getStartTime(), body.getFrequencyDays(),body.getWateringTime()))
-                .map(circuitScheduleDto -> new ResponseEntity<>(circuitScheduleDto, HttpStatus.OK))
+                .map(circuitScheduleDTO -> new ResponseEntity<>(circuitScheduleDTO, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 

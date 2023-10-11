@@ -1,7 +1,6 @@
 package com.hydrogarden.server.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hydrogarden.server.domain.dto.CircuitDto;
+import com.hydrogarden.server.domain.dto.CircuitDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -44,8 +43,14 @@ public class Circuit extends AbstractEntity {
     private List<CircuitSchedule> circuitSchedules;
 
 
-    public static Circuit fromCircuitDto(CircuitDto circuitDto) {
-
+    public static Circuit fromCircuitDto(CircuitDTO circuitDto) {
+        Circuit circuit = new Circuit();
+        circuit.setId(circuitDto.getId());
+        circuit.setCode(circuitDto.getCircuitCode());
+        circuit.setName(circuitDto.getCircuitName());
+        circuit.setCircuitState(circuitDto.getCircuitState());
+        circuit.setUser(User.fromUserDTO(circuitDto.getUser()));
+        return circuit;
     }
 }
 

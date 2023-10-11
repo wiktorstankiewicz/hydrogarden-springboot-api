@@ -1,4 +1,4 @@
-package com.hydrogarden.server.controllers.requestResponseEntities;
+package com.hydrogarden.server.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

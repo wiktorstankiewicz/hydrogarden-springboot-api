@@ -1,7 +1,9 @@
 package com.hydrogarden.server.controllers;
 
-import com.hydrogarden.server.controllers.requestResponseEntities.RenameCircuitDTO;
-import com.hydrogarden.server.domain.dto.CircuitDto;
+import com.hydrogarden.server.domain.dto.CircuitScheduleDTO;
+import com.hydrogarden.server.domain.dto.RenameCircuitDTO;
+import com.hydrogarden.server.domain.dto.CircuitDTO;
+import com.hydrogarden.server.domain.dto.UserDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.services.CircuitService;
@@ -61,15 +63,15 @@ public class CircuitController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<CircuitDto>> find(@RequestParam(value = "circuitId", required = false) Integer circuitId) {
+    public ResponseEntity<List<CircuitDTO>> find(@RequestParam(value = "circuitId", required = false) Integer circuitId) {
         User user = userService.findByUsername("admin").get();
         if (circuitId == null) {
             List<Circuit> circuits = circuitService.findByUserId((int) user.getId());
-            return ResponseEntity.ok(circuits.stream().map(CircuitDto::new).toList());
+            return ResponseEntity.ok(circuits.stream().map(circuit -> new CircuitDTO(circuit,new UserDTO(circuit.getUser()),new CircuitScheduleDTO(circuit.getCircuitSchedules().get(0),new UserDTO(circuit.getUser())))).toList());
         }
 
         Optional<Circuit> circuit = circuitService.findById(circuitId);
-        return circuit.map(value -> ResponseEntity.ok(List.of(new CircuitDto(value)))).orElseGet(() -> ResponseEntity.notFound().build());
+        return circuit.map(value -> ResponseEntity.ok(List.of(new CircuitDTO(value,new UserDTO(value.getUser()),new CircuitScheduleDTO(value.getCircuitSchedules().get(0),new UserDTO(value.getUser())))))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

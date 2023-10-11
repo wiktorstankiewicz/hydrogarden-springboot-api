@@ -1,7 +1,6 @@
 package com.hydrogarden.server.services;
 
-import com.hydrogarden.server.domain.dto.CircuitDto;
-import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
+import com.hydrogarden.server.domain.dto.CircuitDTO;
 import com.hydrogarden.server.domain.entities.Circuit;
 import com.hydrogarden.server.domain.entities.User;
 import com.hydrogarden.server.domain.repositories.CircuitRepository;
@@ -24,9 +23,6 @@ public class CircuitService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<CircuitDto> findAll() {
-        return circuitRepository.findAll().stream().map(CircuitDto::new).collect(Collectors.toList());
-    }
 
     public Optional<Circuit> findById(int id) {
         return circuitRepository.findById(id);

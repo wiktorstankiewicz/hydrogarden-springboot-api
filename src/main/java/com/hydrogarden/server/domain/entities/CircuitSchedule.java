@@ -1,13 +1,12 @@
 package com.hydrogarden.server.domain.entities;
 
-import com.hydrogarden.server.domain.dto.CircuitScheduleDto;
+import com.hydrogarden.server.domain.dto.CircuitScheduleDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.*;
 
 @Table(name = "circuit_schedule")
@@ -32,13 +31,17 @@ public class CircuitSchedule extends AbstractEntity {
     @JoinColumn(name = "circuit_id")
     private Circuit circuit;
 
-    public CircuitSchedule(CircuitScheduleDto dto) {
-        this.startTime = dto.getStartTime();
-        this.startDate = dto.getStartDate();
-        this.endDate = dto.getEndDate();
-        this.frequencyDays = dto.getFrequencyDays();
-        this.wateringTime = dto.getWateringTime();
-        this.deactivated = dto.isDeactivated();
-        this.circuit = Circuit.fromCircuitDto(dto.getCircuitDto());
+
+
+    public static CircuitSchedule fromCircuitScheduleDTO(@Valid CircuitScheduleDTO dto) {
+        CircuitSchedule cs =new CircuitSchedule();
+        cs.startTime = dto.getStartTime();
+        cs.startDate = dto.getStartDate();
+        cs.endDate = dto.getEndDate();
+        cs.frequencyDays = dto.getFrequencyDays();
+        cs.wateringTime = dto.getWateringTime();
+        cs.deactivated = dto.getDeactivated();
+        cs.circuit = Circuit.fromCircuitDto(dto.getCircuitDto());
+        return cs;
     }
 }

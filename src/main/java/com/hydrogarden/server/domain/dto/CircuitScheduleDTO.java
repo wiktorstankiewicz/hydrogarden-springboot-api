@@ -1,10 +1,8 @@
 package com.hydrogarden.server.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hydrogarden.server.domain.entities.Circuit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,13 +10,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Data
-public class CircuitScheduleDto {
+public class CircuitScheduleDTO {
 
     @NotNull
     private Integer id;
@@ -45,11 +41,12 @@ public class CircuitScheduleDto {
     private Integer wateringTime;
     @NotNull
     private Boolean deactivated;
+    @JsonIgnore
     @Valid
     @NotNull
-    private CircuitDto circuitDto;
+    private CircuitDTO circuitDto;
 
-    public CircuitScheduleDto(CircuitSchedule cs) {
+    public CircuitScheduleDTO(CircuitSchedule cs, UserDTO userDTO) {
         startTime = cs.getStartTime();
         startDate = cs.getStartDate();
         endDate = cs.getEndDate();
@@ -57,7 +54,24 @@ public class CircuitScheduleDto {
         wateringTime = cs.getWateringTime();
         deactivated = cs.isDeactivated();
         id = cs.getId();
-        circuitDto = new CircuitDto(cs.getCircuit());
+        circuitDto = new CircuitDTO(cs.getCircuit(),userDTO,this);
     }
 
+    public CircuitScheduleDTO(Integer id,
+                              LocalTime startTime,
+                              LocalDate startDate,
+                              LocalDate endDate,
+                              Integer frequencyDays,
+                              Integer wateringTime,
+                              Boolean deactivated,
+                              CircuitDTO circuitDto) {
+        this.id = id;
+        this.startTime = startTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.frequencyDays = frequencyDays;
+        this.wateringTime = wateringTime;
+        this.deactivated = deactivated;
+        this.circuitDto = circuitDto;
+    }
 }
