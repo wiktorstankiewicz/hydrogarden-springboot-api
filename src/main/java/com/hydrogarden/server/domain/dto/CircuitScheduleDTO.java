@@ -12,6 +12,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 public class CircuitScheduleDTO {
@@ -44,34 +45,11 @@ public class CircuitScheduleDTO {
     @JsonIgnore
     @Valid
     @NotNull
-    private CircuitDTO circuitDto;
+    private CircuitDTO circuit;
 
-    public CircuitScheduleDTO(CircuitSchedule cs, UserDTO userDTO) {
-        startTime = cs.getStartTime();
-        startDate = cs.getStartDate();
-        endDate = cs.getEndDate();
-        frequencyDays = cs.getFrequencyDays();
-        wateringTime = cs.getWateringTime();
-        deactivated = cs.isDeactivated();
-        id = cs.getId();
-        circuitDto = new CircuitDTO(cs.getCircuit(),userDTO,this);
-    }
+    @JsonIgnore
+    @Valid
+    @NotNull
+    private List<GeneratedTaskDTO> generatedTasks;
 
-    public CircuitScheduleDTO(Integer id,
-                              LocalTime startTime,
-                              LocalDate startDate,
-                              LocalDate endDate,
-                              Integer frequencyDays,
-                              Integer wateringTime,
-                              Boolean deactivated,
-                              CircuitDTO circuitDto) {
-        this.id = id;
-        this.startTime = startTime;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.frequencyDays = frequencyDays;
-        this.wateringTime = wateringTime;
-        this.deactivated = deactivated;
-        this.circuitDto = circuitDto;
-    }
 }

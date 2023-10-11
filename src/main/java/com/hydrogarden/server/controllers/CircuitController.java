@@ -67,11 +67,11 @@ public class CircuitController {
         User user = userService.findByUsername("admin").get();
         if (circuitId == null) {
             List<Circuit> circuits = circuitService.findByUserId((int) user.getId());
-            return ResponseEntity.ok(circuits.stream().map(circuit -> new CircuitDTO(circuit,new UserDTO(circuit.getUser()),new CircuitScheduleDTO(circuit.getCircuitSchedules().get(0),new UserDTO(circuit.getUser())))).toList());
+            return ResponseEntity.ok(circuits.stream().map(circuit -> new CircuitDTO(circuit,new UserDTO(circuit.getUser()),new CircuitScheduleDTO(circuit.getCircuitSchedule(),new UserDTO(circuit.getUser())))).toList());
         }
 
         Optional<Circuit> circuit = circuitService.findById(circuitId);
-        return circuit.map(value -> ResponseEntity.ok(List.of(new CircuitDTO(value,new UserDTO(value.getUser()),new CircuitScheduleDTO(value.getCircuitSchedules().get(0),new UserDTO(value.getUser())))))).orElseGet(() -> ResponseEntity.notFound().build());
+        return circuit.map(value -> ResponseEntity.ok(List.of(new CircuitDTO(value,new UserDTO(value.getUser()),new CircuitScheduleDTO(value.getCircuitSchedule(),new UserDTO(value.getUser())))))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

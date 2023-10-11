@@ -33,32 +33,8 @@ public class UserDTO {
     @NotNull
     private List<CircuitDTO> circuits;
 
-    @NotNull
-    private List<GeneratedTaskDTO> generatedTasks;
 
-    public UserDTO(User user){
-        if(user == null){
-            throw new IllegalArgumentException();
-        }
-        this.id=user.getId();
-        this.username=user.getUsername();
-        this.authorities=user.getAuthorities();
-        this.circuits=user.getCircuits().stream().map(circuit -> new CircuitDTO(circuit,this,new CircuitScheduleDTO(circuit.getCircuitSchedules().get(0),this))).collect(Collectors.toList());
-    }
 
-    public UserDTO(long id,
-                   String username,
-                   String password,
-                   Role role,
-                   Collection<? extends GrantedAuthority> authorities,
-                   List<CircuitDTO> circuits,
-                   List<GeneratedTaskDTO> generatedTasks) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.authorities = authorities;
-        this.circuits = circuits;
-        this.generatedTasks = generatedTasks;
-    }
+
+
 }

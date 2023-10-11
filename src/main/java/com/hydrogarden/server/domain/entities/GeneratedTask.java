@@ -31,30 +31,12 @@ public class GeneratedTask extends AbstractEntity implements Delayed {
     private boolean done;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "circuit_id")
-    private Circuit circuit;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "circuit_schedule_id")
     private CircuitSchedule circuitSchedule;
 
-    public static GeneratedTask fromGeneratedTaskDTO(GeneratedTaskDTO dto) {
-        GeneratedTask generatedTask = new GeneratedTask();
-        generatedTask.setDatetime(dto.getDateTime());
-        generatedTask.setMode(dto.getMode());
-        generatedTask.setDone(dto.getDone());
-        generatedTask.setUser(User.fromUserDTO(dto.getUserDTO()));
-        generatedTask.setCircuit(Circuit.fromCircuitDto(dto.getCircuitDTO()));
-        return generatedTask;
-    }
+
 
 
     @Override

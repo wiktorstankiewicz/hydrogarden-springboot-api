@@ -21,10 +21,4 @@ public class DeviceTaskDTO {
     @NotNull
     private Boolean mode;
 
-    public static DeviceTaskDTO fromGeneratedTaskDto(@Valid GeneratedTaskDTO generatedTaskDto) {
-        int circuitCode = generatedTaskDto.getCircuitDTO().getCircuitCode();
-        boolean mode = generatedTaskDto.getMode();
-        long id = generatedTaskDto.getId();
-        return new DeviceTaskDTO(circuitCode, id ,mode);
-    }
 }

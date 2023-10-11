@@ -3,6 +3,9 @@ package com.hydrogarden.server.services;
 import com.hydrogarden.server.domain.dto.CircuitScheduleDTO;
 import com.hydrogarden.server.domain.dto.UserDTO;
 import com.hydrogarden.server.domain.entities.CircuitSchedule;
+import com.hydrogarden.server.domain.mappers.CircuitMapper;
+import com.hydrogarden.server.domain.mappers.CircuitScheduleMapper;
+import com.hydrogarden.server.domain.mappers.UserMapper;
 import com.hydrogarden.server.domain.repositories.CircuitScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,8 @@ public class CircuitScheduleService {
 
     public Optional<CircuitScheduleDTO> findById(int id) {
         return circuitScheduleRepository.findById(id).
-                map(circuitSchedule -> new CircuitScheduleDTO(circuitSchedule,new UserDTO(circuitSchedule.getCircuit().getUser())));
+                map(circuitSchedule -> CircuitScheduleMapper.fromEntity(circuitSchedule, CircuitMapper.fromEntity(circuitSchedule.getCircuit(),
+                        UserMapper.fromEntity(circuitSchedule.getCircuit().getUser()))));
     }
 
     public void deleteAll() {
@@ -32,18 +36,16 @@ public class CircuitScheduleService {
     }
 
     public List<CircuitScheduleDTO> findAll() {
-        return circuitScheduleRepository.findAll().stream().map(circuitSchedule -> new CircuitScheduleDTO(circuitSchedule,new UserDTO(circuitSchedule.getCircuit().getUser())) ).collect(Collectors.toList());
+        return circuitScheduleRepository.findAll().stream().map(circuitSchedule -> new CircuitScheduleDTO(circuitSchedule, new UserDTO(circuitSchedule.getCircuit().getUser()))).collect(Collectors.toList());
     }
 
     public CircuitScheduleDTO create(CircuitScheduleDTO dto) {
-        return new CircuitScheduleDTO(circuitScheduleRepository.save(CircuitSchedule.fromCircuitScheduleDTO(dto)),dto.getCircuitDto().getUser());
+        return new CircuitScheduleDTO(circuitScheduleRepository.save()
     }
 
     public void delete(CircuitScheduleDTO circuitToDelete) {
         circuitScheduleRepository.delete(CircuitSchedule.fromCircuitScheduleDTO(circuitToDelete));
     }
-
-
 
 
     public boolean activate(int id) {
@@ -88,7 +90,7 @@ public class CircuitScheduleService {
                 cs.setWateringTime(wateringTime);
             }
             circuitScheduleRepository.save(cs);
-            return new CircuitScheduleDTO(cs,new UserDTO(cs.getCircuit().getUser()));
+            return new CircuitScheduleDTO(cs, new UserDTO(cs.getCircuit().getUser()));
         }
         return null;
     }
